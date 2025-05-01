@@ -13,73 +13,44 @@ class ClassController{
      * TODO: CHANGE
     */
     public function create(array $classDataArray): void{
-        $error = false;
-        $errors = [];
-
-        //In case we need to add error and form data, we erase the previously registered ones
-        $_SESSION["errors"] = [];
-        $_SESSION["formData"] = [];
-
-        // /*****************************************************/
-        // // Field format checks
-        // // if (!nombreUsuarioValido($arrayUser["nick"])) {
-        // //     $error = true;
-        // //     $errores["usuario"][] = "El usuario tiene un formato incorrecto";
-        // // }
-        // /*****************************************************/
-
-        //Empty field checks
         $nonNullableFields = [
-            "name", "type", 
-            "health_growth", "strength_growth", "magic_growth", "skill_growth",
-            "speed_growth", "luck_growth", "defense_growth", "resistance_growth"    
+            "name", 
+            "type", 
+            "health_growth", 
+            "strength_growth", 
+            "magic_growth", 
+            "skill_growth", 
+            "speed_growth", 
+            "luck_growth", 
+            "defense_growth", 
+            "resistance_growth"    
         ];
-        $foundNullFields = areThereNullFields($nonNullableFields, $classDataArray);
-
-        if (count($foundNullFields) > 0) {
-            $error = true;
-            for ($i = 0; $i < count($foundNullFields); $i++) {
-                $errors[$foundNullFields[$i]][] = "The {$foundNullFields[$i]} field is null";
-            }
-        }
-
-        //Unique fields checks
         $uniqueFields = ["name"];
+        $dataIsValid = isValidFormData($nonNullableFields, $uniqueFields, $classDataArray, $this->model);
+        
+        if($dataIsValid) {
+            /*
+            TODO: ADD FORMATTING CHECKS HERE
+            */
+            $newClassId = $this->model->insert($classDataArray);
 
-        foreach ($uniqueFields as $uniqueField) {
-            if ($this->model->exists($uniqueField, $classDataArray[$uniqueField])) {
-                $error = true;
-                $errors[$uniqueField][] = "Value {$classDataArray[$uniqueField]} for {$uniqueField} is already registered";
-            }
-        }
+            if($newClassId != null){
+                $newClassGrowthsId = $this->model->addGrowths($newClassId, $classDataArray);
 
-
-        //Final check. If no errors were found, the insertion is made
-        if (!$error) {
-            $classId = $this->model->insert($classDataArray);
-        } else {
-            $classId = null;
-        }
-
-        if ($classId == null) {
-            $_SESSION["errors"] = $errors;
-            $_SESSION["formData"] = $classDataArray;
-            header("location:index.php?table=class&action=create&error=true");
-            exit();
-        } else {
-            $classGrowthsId = $this->model->addGrowths($classId, $classDataArray);
-
-            if($classGrowthsId == null){
-                $_SESSION["errors"] = $errors;
-                $_SESSION["formData"] = $classDataArray;
+                if($newClassGrowthsId != null){
+                    header("location:index.php?table=class&action=show&id=" . $newClassId);
+                    exit();
+                }else{
+                    header("location:index.php?table=class&action=create&error=true");
+                    exit();
+                }
+            }else{
                 header("location:index.php?table=class&action=create&error=true");
                 exit();
-            }else{
-                unset($_SESSION["errors"]);
-                unset($_SESSION["formData"]);
-                header("location:index.php?table=class&action=show&id=".$classId);
-                exit();
             }
+        }else{
+            header("location:index.php?table=class&action=create&error=true");
+            exit();
         }
     }
 
@@ -130,8 +101,51 @@ class ClassController{
     /*
      * TODO: Add comment
     */
-    public function update(int $classId, array $class): bool{
-        return $this->model->update($classId, $class);
+    public function update(int $classId, array $classDataArray): void{
+        $nonNullableFields = [
+            "name", 
+            "type", 
+            "health_growth", 
+            "strength_growth", 
+            "magic_growth", 
+            "skill_growth", 
+            "speed_growth", 
+            "luck_growth", 
+            "defense_growth", 
+            "resistance_growth"    
+        ];
+
+        $uniqueFields = [];
+        if($classDataArray["name"] != $classDataArray["previousName"]){
+            $uniqueFields[] = "name";
+        }
+
+        $dataIsValid = isValidFormData($nonNullableFields, $uniqueFields, $classDataArray, $this->model);
+        
+        if($dataIsValid) {
+            /*
+            TODO: ADD FORMATTING CHECKS HERE
+            */
+            $succesfulClassUpdate = $this->model->update($classId, $classDataArray);
+
+            if($succesfulClassUpdate){
+                $successfullGrowthsUpdate = $this->model->updateGrowths($classId, $classDataArray);
+
+                if($successfullGrowthsUpdate){
+                    header("location:index.php?table=class&action=show&id=" . $classId);
+                    exit();
+                }else{
+                    header("location:index.php?table=class&action=update&error=true");
+                    exit();
+                }
+            }else{
+                header("location:index.php?table=class&action=update&error=true");
+                exit();
+            }
+        }else{
+            header("location:index.php?table=class&action=update&error=true");
+            exit();
+        }
     }
 
     /*

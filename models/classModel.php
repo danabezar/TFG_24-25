@@ -1,7 +1,8 @@
 <?php
 require_once('config/db.php');
+require_once('baseModel.php');
 
-class ClassModel{
+class ClassModel implements BaseModel{
     private $connection;
     public function __construct(){
         $this->connection = db::connection();
@@ -104,8 +105,10 @@ class ClassModel{
     public function findByIdDetailed(int $id): stdClass | null {
         $sqlQuery = "
             SELECT c.`id`, c.`name`, c.`type`, 
-            g.`health_growth`, g.`strength_growth`, g.`magic_growth`, g.`skill_growth`, 
-            g.`speed_growth`, g.`luck_growth`, g.`defense_growth`, g.`resistance_growth` 
+            g.`health` AS `health_growth`, g.`strength` AS `strength_growth`, 
+            g.`magic` AS `magic_growth`, g.`skill` AS `skill_growth`, 
+            g.`speed` AS `speed_growth`, g.`luck` AS `luck_growth`, 
+            g.`defense` AS `defense_growth`, g.`resistance` AS `resistance_growth` 
             FROM `class` c
             LEFT JOIN `class_growths` g
             ON (c.`id` = g.`class_id`)
@@ -150,12 +153,14 @@ class ClassModel{
     public function readAllDetailed(): array | null{
         $sqlQuery = "
             SELECT c.`id`, c.`name`, c.`type`, 
-            g.`health_growth`, g.`strength_growth`, g.`magic_growth`, g.`skill_growth`, 
-            g.`speed_growth`, g.`luck_growth`, g.`defense_growth`, g.`resistance_growth` 
+            g.`health` AS `health_growth`, g.`strength` AS `strength_growth`, 
+            g.`magic` AS `magic_growth`, g.`skill` AS `skill_growth`, 
+            g.`speed` AS `speed_growth`, g.`luck` AS `luck_growth`, 
+            g.`defense` AS `defense_growth`, g.`resistance` AS `resistance_growth` 
             FROM `class` c
             LEFT JOIN `class_growths` g
             ON (c.`id` = g.`class_id`)
-            ORDER BY u.`id`;
+            ORDER BY c.`id`;
         ";
         $preparedQuery = $this->connection->prepare($sqlQuery);
         $result = $preparedQuery->execute();

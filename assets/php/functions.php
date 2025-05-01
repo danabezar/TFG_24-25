@@ -22,8 +22,10 @@ function areThereNullFields(array $fieldsToCheck, array $dataArray): array{
     $foundNulls = [];
 
     foreach ($fieldsToCheck as $index => $field) {
-        if (!isset($dataArray[$field]) || empty($dataArray[$field]) || $dataArray[$field] == null) {
-            $foundNulls[] = $field;
+        if (!isset($dataArray[$field]) || empty($dataArray[$field]) || $dataArray[$field] === null) {
+            if($dataArray[$field] != "0" && $dataArray[$field] != 0){
+                $foundNulls[] = $field;
+            }
         }
     }
     return $foundNulls;
@@ -46,5 +48,47 @@ function showErrors($errorArray, $field){
     }
 
     return $errorString;
+}
+
+function isValidFormData(array $nonNullableFields, array $uniqueFields, array $formDataArray, BaseModel $model): bool{
+    $error = false;
+    $errors = [];
+
+    //In case we need to add error and form data, we erase the previously registered ones
+    $_SESSION["errors"] = [];
+    if (isset($_SESSION["errors"])) {
+        unset($_SESSION["errors"]);
+    }
+    $_SESSION["formData"] = [];
+    if (isset($_SESSION["formData"])) {
+        unset($_SESSION["formData"]);
+    }
+
+    //Empty field checks
+    $foundNullFields = areThereNullFields($nonNullableFields, $formDataArray);
+
+    if (count($foundNullFields) > 0) {
+        $error = true;
+        for ($i = 0; $i < count($foundNullFields); $i++) {
+            $errors[$foundNullFields[$i]][] = "The \"{$foundNullFields[$i]}\" field is null";
+        }
+    }
+
+    //Unique fields checks
+    foreach ($uniqueFields as $uniqueField) {
+        if ($model->exists($uniqueField, $formDataArray[$uniqueField])) {
+            $error = true;
+            $errors[$uniqueField][] = "Value \"{$formDataArray[$uniqueField]}\" for \"{$uniqueField}\" is already registered";
+        }
+    }
+
+    //Final check. If no errors were found, the insertion is made
+    if (!$error) {
+        return true;
+    } else {
+        $_SESSION["errors"] = $errors;
+        $_SESSION["formData"] = $formDataArray;
+        return false;
+    }
 }
 ?>

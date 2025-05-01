@@ -37,7 +37,7 @@ CREATE TABLE `class_growths` (
   `class_id` bigint(20) unsigned UNIQUE NOT NULL,
   PRIMARY KEY (`id`),
   KEY `class_growths_class_id_foreign` (`class_id`) USING BTREE,
-  CONSTRAINT `class_growths_FK` FOREIGN KEY (`class_id`) REFERENCES `class` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `class_growths_FK` FOREIGN KEY (`class_id`) REFERENCES `class` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 'skill' table definition

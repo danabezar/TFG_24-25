@@ -28,6 +28,15 @@ function router (){
             "list" => "list.php",
             "delete" => "delete.php"
         ],
+        "class" => [
+            "create" => "create.php",
+            "store" => "store.php",
+            "show" => "show.php",
+            "list" => "list.php",
+            "update" => "update.php",
+            "delete" => "delete.php",
+            "search" => "search.php"
+        ],
         "unit" => [
             "create" => "create.php",
             "store" => "store.php",
