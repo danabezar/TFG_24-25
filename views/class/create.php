@@ -22,7 +22,7 @@ if (isset($_SESSION["errors"])) {
         <div class="alert alert-danger" style="display: <?= $errorVisibility ?>;"> <?= $errorString ?> </div>
         <form id="insertion-form" action="index.php?table=class&action=store&event=create" method="POST">
             <div class="form-group">
-                <label for="username">Name</label>
+                <label for="name">Name</label>
                 <input type="text" class="form-control" id="name" name="name" aria-describedby="Name" placeholder="Write a name for the class" value="<?= $_SESSION["formData"]["name"] ?? "" ?>" required>
                 <?= isset($errors["name"]) ? '<div class="alert alert-danger" role="alert">' . showErrors($errors, "name") . '</div>' : ""; ?>
             </div>

@@ -135,15 +135,15 @@ class ClassController{
                     header("location:index.php?table=class&action=show&id=" . $classId);
                     exit();
                 }else{
-                    header("location:index.php?table=class&action=update&error=true");
+                    header("location:index.php?table=class&action=update&id={$classId}&error=true");
                     exit();
                 }
             }else{
-                header("location:index.php?table=class&action=update&error=true");
+                header("location:index.php?table=class&action=update&id={$classId}&error=true");
                 exit();
             }
         }else{
-            header("location:index.php?table=class&action=update&error=true");
+            header("location:index.php?table=class&action=update&id={$classId}&error=true");
             exit();
         }
     }

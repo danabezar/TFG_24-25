@@ -1,7 +1,8 @@
 <?php
 require_once('config/db.php');
+require_once('baseModel.php');
 
-class SkillModel{
+class SkillModel implements BaseModel{
     private $connection;
     public function __construct(){
         $this->connection = db::connection();
@@ -12,11 +13,15 @@ class SkillModel{
     */
     public function insert(array $skill): int | null {
         try {
-            $sqlQuery = "INSERT INTO `skill`(`name`, `type`, `value`)  VALUES (:name, :type, :value);";
+            $sqlQuery = "
+                INSERT INTO `skill`(`name`, `type`, `attribute`, `value`) 
+                VALUES (:name, :type, :attribute, :value);
+            ";
             $preparedQuery = $this->connection->prepare($sqlQuery);
             $dataArray = [
                 ":name" => $skill["name"],
                 ":type" => $skill["type"],
+                ":attribute" => $skill["attribute"],
                 ":value" => $skill["value"]
             ];
             $result = $preparedQuery->execute($dataArray);
@@ -71,8 +76,9 @@ class SkillModel{
     public function update(int $id, array $skill): bool {
         try {
             $sqlQuery = "
-                UPDATE `skill` SET `name` = :newName, 
-                `type` = :newType, `value` =:newValue 
+                UPDATE `skill` 
+                SET `name` = :newName, `type` = :newType, 
+                `value` = :newValue, `attribute` = :newAttribute 
                 WHERE `id` = :id;
             ";
             $preparedQuery = $this->connection->prepare($sqlQuery);
@@ -80,6 +86,7 @@ class SkillModel{
                 ":id" => $id,
                 ":newName" => $skill['name'],
                 ":newType" => $skill["type"],
+                ":newAttribute" => $skill["attribute"],
                 ":newValue" => $skill["value"]
             ];
 

@@ -37,6 +37,15 @@ function router (){
             "delete" => "delete.php",
             "search" => "search.php"
         ],
+        "skill" => [
+            "create" => "create.php",
+            "store" => "store.php",
+            "show" => "show.php",
+            "list" => "list.php",
+            "update" => "update.php",
+            "delete" => "delete.php",
+            "search" => "search.php"
+        ],
         "unit" => [
             "create" => "create.php",
             "store" => "store.php",
@@ -44,14 +53,7 @@ function router (){
             "list" => "list.php",
             "update" => "update.php",
             "delete" => "delete.php"
-        ],
-        // "match" => [
-        //     "seleccionarRival" => "pickmatch.php",
-        //     "batallar" => "batalla.php",
-        //     "realizarCombate" => "storeMatch.php",
-        //     "verCombate" => "watchMatch.php",
-        //     "resultados" => "results.php",
-        // ],
+        ]
     ];
 
     //If the table introduced is not registered, the user is redirected to the home page

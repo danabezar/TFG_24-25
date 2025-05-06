@@ -5,7 +5,7 @@ require_once "controllers/classController.php";
 $id = ($_REQUEST["id"]) ?? "";
 
 $classArrayData = [
-    "id" => $id,    
+    "id" => $id, 
     "name" => $_REQUEST["name"],
     "previousName" => $_REQUEST["previousName"] ?? "",
     "type" => $_REQUEST["type"],
