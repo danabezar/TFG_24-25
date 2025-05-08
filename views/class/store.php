@@ -6,23 +6,33 @@ $id = ($_REQUEST["id"]) ?? "";
 
 $classArrayData = [
     "id" => $id, 
-    "name" => $_REQUEST["name"],
+    "name" => $_REQUEST["name"] ?? "",
     "previousName" => $_REQUEST["previousName"] ?? "",
-    "type" => $_REQUEST["type"],
-    "health_growth" => $_REQUEST["health_growth"],
-    "strength_growth" => $_REQUEST["strength_growth"],
-    "magic_growth" => $_REQUEST["magic_growth"],
-    "skill_growth" => $_REQUEST["skill_growth"],
-    "speed_growth" => $_REQUEST["speed_growth"],
-    "luck_growth" => $_REQUEST["luck_growth"],
-    "defense_growth" => $_REQUEST["defense_growth"],
-    "resistance_growth" => $_REQUEST["resistance_growth"]
+    "type" => $_REQUEST["type"] ?? "",
+    "health_growth" => $_REQUEST["health_growth"] ?? "",
+    "strength_growth" => $_REQUEST["strength_growth"] ?? "",
+    "magic_growth" => $_REQUEST["magic_growth"] ?? "",
+    "skill_growth" => $_REQUEST["skill_growth"] ?? "",
+    "speed_growth" => $_REQUEST["speed_growth"] ?? "",
+    "luck_growth" => $_REQUEST["luck_growth"] ?? "",
+    "defense_growth" => $_REQUEST["defense_growth"] ?? "",
+    "resistance_growth" => $_REQUEST["resistance_growth"] ?? ""
 ];
 
 $controller = new ClassController();
 
 if ($_REQUEST["event"] == "create"){
     $controller->create($classArrayData);
-} else if($_REQUEST["event"] == "update"){
+} else if ($_REQUEST["event"] == "update"){
     $controller->update($id, $classArrayData);
+} else if ($_REQUEST["event"] == "addSkill"){
+    if(!isset($_REQUEST["selectedSkill"], $_REQUEST["requiredLevel"])){
+        header('location:index.php?table=class&action=show&id=' . $id);
+        exit();
+    }
+
+    $skillId = $_REQUEST["selectedSkill"];
+    $requiredLevel = $_REQUEST["requiredLevel"];
+
+    $controller->addSkill($id, $skillId, $requiredLevel);
 }

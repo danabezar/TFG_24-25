@@ -114,4 +114,8 @@ class SkillController{
     public function exists(string $field, string $fieldValue): bool {
         return $this->model->exists($field, $fieldValue);
     }
+
+    public function getAvailableForClass(int $classId): array | null {
+        return $this->model->getAvailableForClass($classId);
+    }
 }

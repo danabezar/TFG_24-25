@@ -35,7 +35,9 @@ function router (){
             "list" => "list.php",
             "update" => "update.php",
             "delete" => "delete.php",
-            "search" => "search.php"
+            "search" => "search.php",
+            "addSkill" => "addSkill.php",
+            "deleteSkill" => "deleteSkill.php"
         ],
         "skill" => [
             "create" => "create.php",

@@ -77,7 +77,7 @@ class ClassModel implements BaseModel{
      */
     public function findByIdSkills(int $id): array | null {
         $sqlQuery = "
-            SELECT c.`id`, s.`id`, s.`name`, s.`type`, s.`attribute`, s.`value` 
+            SELECT c.`id`, s.`id`, s.`name`, s.`type`, s.`attribute`, s.`value`, cs.`level_required` 
             FROM `class_skill` cs
             LEFT JOIN `class` c
             ON (cs.`class_id` = c.`id`) 
@@ -355,7 +355,7 @@ class ClassModel implements BaseModel{
     public function addSkill(int $classId, int $skillId, int $requiredLevel = 10): int | null {
         try {
             $sqlQuery = "
-                INSERT INTO `class_skill`(`class_id`, `skill_id`, `level_required` VALUES 
+                INSERT INTO `class_skill`(`class_id`, `skill_id`, `level_required`) VALUES 
                 (:classId, :skillId, :requiredLevel);
             ";
             $preparedQuery = $this->connection->prepare($sqlQuery);

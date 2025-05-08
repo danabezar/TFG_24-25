@@ -168,4 +168,25 @@ class SkillModel implements BaseModel{
             return true;
         }
     }
+
+    function getAvailableForClass(int $classId): array | null {
+        $sqlQuery = "
+            SELECT * FROM `skill` 
+            WHERE `id` NOT IN 
+            (SELECT `skill_id` FROM `class_skill` 
+            WHERE `class_id` = :classId);
+        ";
+        $preparedQuery = $this->connection->prepare($sqlQuery);
+        $dataArray = [
+            ":classId" => $classId
+        ];
+        $result = $preparedQuery->execute($dataArray);
+
+        if (!$result) {
+            return null;
+        } else {
+            $skills = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
+            return $skills;
+        }
+    }
 }

@@ -9,6 +9,7 @@ if (!isset($_REQUEST['id'])) {
 $id = $_REQUEST['id'];
 $controller = new ClassController();
 $class = $controller->readDetailed($id);
+$classSkills = $controller->readSkills($id);
 ?>
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -39,4 +40,54 @@ $class = $controller->readDetailed($id);
         </div>
         <a href="index.php?table=class&action=list" class="btn btn-primary">Return to list</a>
     </div>
+    <br>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h5">Current Skills</h1>
+        <a class="btn btn-primary" href="index.php?table=class&action=addSkill&id=<?= $id ?>" >Add skill</a>
+    </div>
+    <div>
+        <?php
+        if (count($classSkills) <= 0) {
+            echo " No data to show";
+        }
+        else { ?>
+            <table class="table table-light table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Attribute</th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Lvl Req.</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($classSkills as $classSkill) {
+                        $id = $classSkill->id;
+                    ?>
+                        <tr>
+                            <th scope="row">
+                                <?= $classSkill->id ?>
+                            </th>
+                            <td><?= $classSkill->name ?></td>
+                            <td><?= $classSkill->type ?></td>
+                            <td><?= $classSkill->attribute ?></td>
+                            <td><?= $classSkill->value ?></td>
+                            <td><?= $classSkill->level_required ?></td>
+                            <td>
+                                <a class="btn btn-danger" href="index.php?table=class&action=deleteSkill&id=<?= $class->id ?>&skillId=<?= $classSkill->id ?>"><i class="fa fa-trash"></i> Delete</a>
+                            </td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        <?php
+        }
+        ?>
+    </div>
+    <table class="table table-light table-hover">
 </main>

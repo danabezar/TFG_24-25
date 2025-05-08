@@ -10,7 +10,7 @@ class ClassController{
     }
 
     /*
-     * TODO: CHANGE
+     * TODO: ADD COMMENT
     */
     public function create(array $classDataArray): void{
         $nonNullableFields = [
@@ -71,7 +71,7 @@ class ClassController{
     /*
      * TODO: Add comment
     */
-    public function readSkills(int $id): stdClass | null {
+    public function readSkills(int $id): array | null {
         return $this->model->findByIdSkills($id);
     }
 
@@ -203,8 +203,11 @@ class ClassController{
     /*
      * TODO: Add comment
     */
-    public function addSkill(int $classId, int $skillId, int $requiredLevel = 10): int | null {
-        return $this->model->addSkill($classId, $skillId, $requiredLevel);
+    public function addSkill(int $classId, int $skillId, int $requiredLevel = 10): void {
+        //TODO: ADD CHECKS
+        $this->model->addSkill($classId, $skillId, $requiredLevel);
+        header("location:index.php?table=class&action=show&id=" . $classId);
+        exit();
     }
 
     /*
