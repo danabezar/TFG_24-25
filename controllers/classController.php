@@ -203,11 +203,30 @@ class ClassController{
     /*
      * TODO: Add comment
     */
-    public function addSkill(int $classId, int $skillId, int $requiredLevel = 10): void {
-        //TODO: ADD CHECKS
-        $this->model->addSkill($classId, $skillId, $requiredLevel);
-        header("location:index.php?table=class&action=show&id=" . $classId);
-        exit();
+    public function addSkill(array $classDataArray): void {
+        $nonNullableFields = [
+            "selectedSkill", 
+            "requiredLevel"
+        ];
+        $uniqueFields = [];
+        $dataIsValid = isValidFormData($nonNullableFields, $uniqueFields, $classDataArray, $this->model);
+        
+        if($dataIsValid) {
+            /*
+            TODO: ADD FORMATTING CHECKS HERE
+            */
+            $this->model->addSkill(
+                $classDataArray["id"], 
+                $classDataArray["selectedSkill"], 
+                $classDataArray["requiredLevel"]
+            );
+
+            header("location:index.php?table=class&action=show&id=" . $classDataArray["id"]);
+            exit();
+        }else{
+            header("location:index.php?table=class&action=addSkill&id=".  $classDataArray["id"] . "&error=true");
+            exit();
+        }
     }
 
     /*

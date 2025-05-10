@@ -7,6 +7,17 @@ if(!isset($_REQUEST["id"])){
     exit();
 }
 
+$errors = [];
+$previousFormData = [];
+$errorString = "Errors were found in the data introduced";
+$errorVisibility = "none";
+
+if (isset($_SESSION["errors"])) {
+    $errors = ($_SESSION["errors"]) ?? [];
+    $previousFormData = ($_SESSION["formData"]) ?? [];
+    $errorVisibility = "visible";
+}
+
 $classId = $_REQUEST["id"];
 $classController = new ClassController();
 $skillController = new SkillController();
@@ -26,6 +37,7 @@ $tableVisibility = "hidden";
             echo " No data to show";
         }
         else { ?>
+            <div class="alert alert-danger" style="display: <?= $errorVisibility ?>;"> <?= $errorString ?> </div>
             <form action="index.php?table=class&action=store&event=addSkill" method="POST">
                 <input type="hidden" name="id" value="<?= $classId ?>">
                 <label for="selectedSkill">Skill</label>
@@ -36,8 +48,12 @@ $tableVisibility = "hidden";
                     }
                     ?>
                 </select>
+                <?= isset($errors["selectedSkill"]) ? '<div class="alert alert-danger" role="alert">' . showErrors($errors, "selectedSkill") . '</div>' : ""; ?>
+
                 <label for="requiredLevel">Required Level</label>
                 <input type="number" name="requiredLevel" placeholder="5" value=5 required>
+                <?= isset($errors["requiredLevel"]) ? '<div class="alert alert-danger" role="alert">' . showErrors($errors, "requiredLevel") . '</div>' : ""; ?>
+
                 <button type="submit" class="btn btn-primary">Add skill</button>
             </form>
         <?php

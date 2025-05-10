@@ -16,7 +16,9 @@ $classArrayData = [
     "speed_growth" => $_REQUEST["speed_growth"] ?? "",
     "luck_growth" => $_REQUEST["luck_growth"] ?? "",
     "defense_growth" => $_REQUEST["defense_growth"] ?? "",
-    "resistance_growth" => $_REQUEST["resistance_growth"] ?? ""
+    "resistance_growth" => $_REQUEST["resistance_growth"] ?? "",
+    "selectedSkill" => $_REQUEST["selectedSkill"] ?? "",
+    "requiredLevel" => $_REQUEST["requiredLevel"] ?? ""
 ];
 
 $controller = new ClassController();
@@ -26,13 +28,9 @@ if ($_REQUEST["event"] == "create"){
 } else if ($_REQUEST["event"] == "update"){
     $controller->update($id, $classArrayData);
 } else if ($_REQUEST["event"] == "addSkill"){
-    if(!isset($_REQUEST["selectedSkill"], $_REQUEST["requiredLevel"])){
-        header('location:index.php?table=class&action=show&id=' . $id);
-        exit();
-    }
+    echo "El id de la clase" . $classArrayData["id"] . "<br/>";
+    echo "el Id de la skill " . $classArrayData["selectedSkill"] . "<br/>";
+    echo "el nivel requrido " . $classArrayData["requiredLevel"] . "<br/>";
 
-    $skillId = $_REQUEST["selectedSkill"];
-    $requiredLevel = $_REQUEST["requiredLevel"];
-
-    $controller->addSkill($id, $skillId, $requiredLevel);
+    $controller->addSkill($classArrayData);
 }
