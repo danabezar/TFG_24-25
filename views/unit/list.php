@@ -55,6 +55,7 @@ $tableVisibility = "hidden";
                             <td><?= $unit->base_resistance ?></td>
                             <td>
                                 <a class="btn btn-warning" href="index.php?table=unit&action=show&id=<?= $id ?>"><i class="fa fa-eye"></i> Show</a>
+                                <a class="btn btn-success" href="index.php?table=unit&action=update&id=<?= $id ?>"><i class="fa fa-pencil"></i> Edit</a>
                                 <a class="btn btn-danger" href="index.php?table=unit&action=delete&id=<?= $id ?>"><i class="fa fa-trash"></i> Delete</a>
                             </td>
                         </tr>

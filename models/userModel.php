@@ -1,7 +1,8 @@
 <?php
 require_once('config/db.php');
+require_once('baseModel.php');
 
-class UserModel{
+class UserModel implements BaseModel{
     private $connection;
     public function __construct(){
         $this->connection = db::connection();

@@ -12,83 +12,63 @@ class UnitController{
     /*
      * TODO: CHANGE
     */
-    // public function create(array $userDataArray): void{
-    //     $error = false;
-    //     $errors = [];
+    public function create(array $unitDataArray): void{
+        $nonNullableFields = [
+            "name", 
+            "class", 
+            "level_base",
+            "health_base", 
+            "strength_base", 
+            "magic_base", 
+            "skill_base", 
+            "luck_base", 
+            "defense_base", 
+            "resistance_base", 
+            "magic_base", 
+            "health_growth", 
+            "strength_growth", 
+            "magic_growth", 
+            "skill_growth", 
+            "speed_growth", 
+            "luck_growth", 
+            "defense_growth", 
+            "resistance_growth"    
+        ];
+        $uniqueFields = ["name"];
+        $dataIsValid = isValidFormData($nonNullableFields, $uniqueFields, $unitDataArray, $this->model);
+        
+        if($dataIsValid) {
+            /*
+            TODO: ADD FORMATTING CHECKS HERE
+            */
+            $newUnitId = $this->model->insert($unitDataArray);
 
-    //     //In case we need to add error and form data, we erase the previously registered ones
-    //     $_SESSION["errors"] = [];
-    //     $_SESSION["formData"] = [];
+            if($newUnitId != null){
+                $newUnitBasesId = $this->model->addBases($newUnitId, $unitDataArray);
 
-    //     // /*****************************************************/
-    //     // // Field format checks
-    //     // // if (!nombreUsuarioValido($arrayUser["nick"])) {
-    //     // //     $error = true;
-    //     // //     $errores["usuario"][] = "El usuario tiene un formato incorrecto";
-    //     // // }
-    //     // /*****************************************************/
+                if($newUnitBasesId != null){
+                    $newUnitGrowthsId = $this->model->addGrowths($newUnitId, $unitDataArray);
 
-    //     //Empty field checks
-    //     $nonNullableFields = ["username", "password"];
-    //     $foundNullFields = areThereNullFields($nonNullableFields, $userDataArray);
-
-    //     if (count($foundNullFields) > 0) {
-    //         $error = true;
-    //         for ($i = 0; $i < count($foundNullFields); $i++) {
-    //             $errors[$foundNullFields[$i]][] = "The {$foundNullFields[$i]} field is null";
-    //         }
-    //     }
-
-    //     //Unique fields checks
-    //     $uniqueFields = ["username"];
-
-    //     foreach ($uniqueFields as $uniqueField) {
-    //         if ($this->model->exists($uniqueField, $userDataArray[$uniqueField])) {
-    //             $error = true;
-    //             $errors[$uniqueField][] = "Value {$userDataArray[$uniqueField]} for {$uniqueField} is already registered";
-    //         }
-    //     }
-
-
-    //     //Final check. If no errors were found, the insertion is made
-    //     if (!$error) {
-    //         $id = $this->model->insert($userDataArray);
-    //     } else {
-    //         $id = null;
-    //     }
-
-    //     if ($id == null) {
-    //         $_SESSION["errors"] = $errors;
-    //         $_SESSION["formData"] = $userDataArray;
-    //         header("location:index.php?table=user&action=create&error=true");
-    //         exit();
-    //     } else {
-    //     //     /*****************************************************/
-    //     //     //TODO: Change this so the units are added. Adapt the already existing previous code
-    //     //     // //Se obtienen todos los digimon iniciales
-    //     //     // $digimonIniciales = $this->digimonController->buscar("level", "equals", "1");
-    //     //     // $digimonParaUsuario = [];
-
-    //     //     // //Buscamos aleatoriamente 3 digimon aleatorios distintos
-    //     //     // while(count($digimonParaUsuario) < 3){
-    //     //     //     $seleccionAleatoria = rand(0, (count($digimonIniciales)-1));
-    //     //     //      if(!in_array($digimonIniciales[$seleccionAleatoria]->id, $digimonParaUsuario)){
-    //     //     //          $digimonParaUsuario[]=$digimonIniciales[ $seleccionAleatoria]->id;
-    //     //     //     }
-    //     //     // }
-
-    //     //     // //Tras encontrar los 3 digimon distintos, se asignan al usuario recién creado
-    //     //     // foreach ($digimonParaUsuario as $idDigimonInicial) {
-    //     //     //     $this->userDigimonController->crear($id, $idDigimonInicial);
-    //     //     // }
-    //     //     /*****************************************************/
-
-    //         unset($_SESSION["errors"]);
-    //         unset($_SESSION["formData"]);
-    //         header("location:index.php?table=user&action=show&id=".$id);
-    //         exit();
-    //     }
-    // }
+                    if($newUnitGrowthsId != null){
+                        header("location:index.php?table=unit&action=show&id=" . $newUnitId);
+                        exit();
+                    }else{
+                        header("location:index.php?table=unit&action=create&error=true");
+                        exit();
+                    }
+                }else{
+                    header("location:index.php?table=unit&action=create&error=true");
+                    exit();
+                }
+            }else{
+                header("location:index.php?table=unit&action=create&error=true");
+                exit();
+            }
+        }else{
+            header("location:index.php?table=unit&action=create&error=true");
+            exit();
+        }
+    }
 
     /*
      * TODO: Add comment
@@ -103,6 +83,69 @@ class UnitController{
     public function list(bool $canBeErased = false): array | null {
         $units = $this->model->readAllDetailed();
         return $units;
+    }
+
+
+    //TODO: Hacer esto
+    public function update(array $unitDataArray): void{
+        $nonNullableFields = [
+            "name", 
+            "class", 
+            "level_base",
+            "health_base", 
+            "strength_base", 
+            "magic_base", 
+            "skill_base", 
+            "luck_base", 
+            "defense_base", 
+            "resistance_base", 
+            "magic_base", 
+            "health_growth", 
+            "strength_growth", 
+            "magic_growth", 
+            "skill_growth", 
+            "speed_growth", 
+            "luck_growth", 
+            "defense_growth", 
+            "resistance_growth"    
+        ];
+        $uniqueFields = [];
+        if($unitDataArray["name"] != $unitDataArray["previousName"]){
+            $uniqueFields[] = "name";
+        }
+        $dataIsValid = isValidFormData($nonNullableFields, $uniqueFields, $unitDataArray, $this->model);
+        
+        if($dataIsValid) {
+            /*
+            TODO: ADD FORMATTING CHECKS HERE
+            */
+            $successfulUnitUpdate = $this->model->update($unitDataArray["id"], $unitDataArray);
+
+            if($successfulUnitUpdate){
+                $successfulUnitBasesUpdate = $this->model->updateBases($unitDataArray["id"], $unitDataArray);
+
+                if($successfulUnitBasesUpdate){
+                    $successfulUnitGrowthsUpdate = $this->model->updateGrowths($unitDataArray["id"], $unitDataArray);
+
+                    if($successfulUnitGrowthsUpdate){
+                        header("location:index.php?table=unit&action=show&id=" . $unitDataArray["id"]);
+                        exit();
+                    }else{
+                        header("location:index.php?table=unit&action=update&id=" . $unitDataArray["id"] . "&error=true");
+                        exit();
+                    }
+                }else{
+                    header("location:index.php?table=unit&action=update&id=" . $unitDataArray["id"] . "&error=true");
+                    exit();
+                }
+            }else{
+                header("location:index.php?table=unit&action=update&id=" . $unitDataArray["id"] . "&error=true");
+                exit();
+            }
+        }else{
+            header("location:index.php?table=unit&action=update&id=" . $unitDataArray["id"] . "&error=true");
+            exit();
+        }
     }
 
     public function delete(int $unitId){
@@ -123,4 +166,6 @@ class UnitController{
             $units = $this->model->search($field, $searchType, $searchString);
             return $units;
     }
+
+    
 }

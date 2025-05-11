@@ -1,7 +1,8 @@
 <?php
 require_once('config/db.php');
+require_once('baseModel.php');
 
-class UserUnitModel{
+class UserUnitModel implements BaseModel{
     private $connection;
     public function __construct(){
         $this->connection = db::connection();
@@ -11,7 +12,7 @@ class UserUnitModel{
     /**
      * Returns an ID if a new UserUnit could be added, else null is returned
     */
-    public function insert(array $userId, $unitId, $level = 1): int | null {
+    public function insert(array $userUnit): int | null {
         try {
             $sqlQuery = "
                 INSERT INTO `user_unit`(`user_id`, `unit_id`, `level`) 
@@ -19,9 +20,9 @@ class UserUnitModel{
             ";
             $preparedQuery = $this->connection->prepare($sqlQuery);
             $dataArray = [
-                ":userId" => $userId,
-                ":unitId" => $unitId,
-                ":level" => $level
+                ":userId" => $userUnit["userId"],
+                ":unitId" => $userUnit["unitId"],
+                ":level" => $userUnit["level"]
             ];
             $result = $preparedQuery->execute($dataArray);
             
@@ -29,6 +30,11 @@ class UserUnitModel{
         } catch (PDOException $e) {
             return null;
         }
+    }
+
+    //TODO: Hacer esto
+    public function findById(int $id): stdClass | null {
+        return null;
     }
 
     /**

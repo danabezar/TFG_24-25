@@ -88,7 +88,7 @@ CREATE TABLE `unit_base_stats` (
   `resistance` INT DEFAULT 5,
   PRIMARY KEY (`id`),
   KEY `unit_base_stats_id_foreign` (`unit_id`) USING BTREE,
-  CONSTRAINT `unit_base_stats_FK` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `unit_base_stats_FK` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 'unit_growths' table definition
@@ -105,7 +105,7 @@ CREATE TABLE `unit_growths` (
   `resistance` INT DEFAULT 10,
   PRIMARY KEY (`id`),
   KEY `unit_growths_class_id_foreign` (`unit_id`) USING BTREE,
-  CONSTRAINT `unit_growths_FK` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `unit_growths_FK` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 'user_unit' table definition, depicting how a 'user' has a 'unit' and viceversa
@@ -118,8 +118,8 @@ CREATE TABLE `user_unit` (
   PRIMARY KEY (`id`),
   KEY `user_unit_user_id_foreign` (`user_id`) USING BTREE,
   KEY `user_unit_unit_id_foreign` (`unit_id`) USING BTREE,
-  CONSTRAINT `user_unit_FK_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `user_unit_FK_unit` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `user_unit_FK_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT `user_unit_FK_unit` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 'user_unit_stats' table definition
@@ -136,7 +136,7 @@ CREATE TABLE `user_unit_stat_gains` (
   `resistance`  INT DEFAULT 0  NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_unit_stat_gains_user_unit_id_foreign` (`user_unit_id`) USING BTREE,
-  CONSTRAINT `user_unit_stat_gains_FK` FOREIGN KEY (`user_unit_id`) REFERENCES `user_unit` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `user_unit_stat_gains_FK` FOREIGN KEY (`user_unit_id`) REFERENCES `user_unit` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 'user_unit_skill' table definition
@@ -147,7 +147,7 @@ CREATE TABLE `user_unit_skill` (
   PRIMARY KEY (`id`),
   KEY `user_unit_skill_user_unit_id_foreign` (`user_unit_id`) USING BTREE,
   KEY `user_unit_skill_skill_id_foreign` (`skill_id`) USING BTREE,
-  CONSTRAINT `user_unit_skill_FK_1` FOREIGN KEY (`user_unit_id`) REFERENCES `user_unit` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `user_unit_skill_FK_1` FOREIGN KEY (`user_unit_id`) REFERENCES `user_unit` (`id`) ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT `user_unit_skill_FK_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -159,7 +159,7 @@ CREATE TABLE `user_unit_equipped_skill` (
   PRIMARY KEY (`id`),
   KEY `user_unit_equipped_skill_user_unit_id_foreign` (`user_unit_id`) USING BTREE,
   KEY `user_unit_equipped_skill_user_unit_skill_id_foreign` (`user_unit_skill_id`) USING BTREE,
-  CONSTRAINT `user_unit_equipped_skill_FK_1` FOREIGN KEY (`user_unit_id`) REFERENCES `user_unit` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `user_unit_equipped_skill_FK_1` FOREIGN KEY (`user_unit_id`) REFERENCES `user_unit` (`id`) ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT `user_unit_equipped_skill_FK_2` FOREIGN KEY (`user_unit_skill_id`) REFERENCES `user_unit_skill` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

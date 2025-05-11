@@ -1,7 +1,8 @@
 <?php
 require_once('config/db.php');
+require_once('baseModel.php');
 
-class UnitModel{
+class UnitModel implements BaseModel{
     private $connection;
     public function __construct(){
         $this->connection = db::connection();
@@ -16,7 +17,7 @@ class UnitModel{
             $preparedQuery = $this->connection->prepare($sqlQuery);
             $dataArray = [
                 ":name" => $unit["name"],
-                ":classId" => $unit["classId"]
+                ":classId" => $unit["class"]
             ];
             $result = $preparedQuery->execute($dataArray);
             
@@ -277,21 +278,22 @@ class UnitModel{
     public function addBases(int $unitId, $unit): int | null {
         try {
             $sqlQuery = "
-                INSERT INTO `unit_base_stats`(`unit_id`, `health`, `strength`, `magic`, `skill`, `speed`, 
-                `luck`, `defense`, `resistance`) VALUES (:id, :health, :strength, :magic, :skill, 
-                :speed, :luck, :defense, :resistance);
+                INSERT INTO `unit_base_stats`(`unit_id`, `level`, `health`, `strength`, `magic`, `skill`, 
+                `speed`, `luck`, `defense`, `resistance`) VALUES (:id, :level, :health, :strength, :magic, 
+                :skill, :speed, :luck, :defense, :resistance);
             ";
             $preparedQuery = $this->connection->prepare($sqlQuery);
             $dataArray = [
-                ":id" => $unitId,
-                ":health" => $unit["base_health"],
-                ":strength" => $unit["base_strength"],
-                ":magic" => $unit["base_magic"],
-                ":skill" => $unit["base_skill"],
-                ":speed" => $unit["base_speed"],
-                ":luck" => $unit["base_luck"],
-                ":defense" => $unit["base_defense"],
-                ":resistance" => $unit["base_resistance"]
+                ":id" => $unitId, 
+                ":level" => $unit["level_base"], 
+                ":health" => $unit["health_base"], 
+                ":strength" => $unit["strength_base"], 
+                ":magic" => $unit["magic_base"], 
+                ":skill" => $unit["skill_base"], 
+                ":speed" => $unit["speed_base"], 
+                ":luck" => $unit["luck_base"], 
+                ":defense" => $unit["defense_base"], 
+                ":resistance" => $unit["resistance_base"]
             ];
             $result = $preparedQuery->execute($dataArray);
             
@@ -307,21 +309,23 @@ class UnitModel{
     public function updateBases(int $unitId, $unit): bool {
         try {
             $sqlQuery = "
-                UPDATE `unit_base_stats` SET `health` = :health, `strength` = :strength, `magic` = :magic, 
-                `skill` = :skill, `speed` = :speed, `luck` = :luck, `defense` = :defense, `resistance` = :resistance
+                UPDATE `unit_base_stats` SET `level` = :level, `health` = :health, `strength` = :strength, 
+                `magic` = :magic, `skill` = :skill, `speed` = :speed, `luck` = :luck, `defense` = :defense, 
+                `resistance` = :resistance 
                 WHERE `unit_id` = :unitId;
             ";
             $preparedQuery = $this->connection->prepare($sqlQuery);
             $dataArray = [
                 ":unitId" => $unitId,
-                ":health" => $unit["base_health"],
-                ":strength" => $unit["base_strength"],
-                ":magic" => $unit["base_magic"],
-                ":skill" => $unit["base_skill"],
-                ":speed" => $unit["base_speed"],
-                ":luck" => $unit["base_luck"],
-                ":defense" => $unit["base_defense"],
-                ":resistance" => $unit["base_resistance"]
+                ":level" => $unit["level_base"], 
+                ":health" => $unit["health_base"],
+                ":strength" => $unit["strength_base"],
+                ":magic" => $unit["magic_base"],
+                ":skill" => $unit["skill_base"],
+                ":speed" => $unit["speed_base"],
+                ":luck" => $unit["luck_base"],
+                ":defense" => $unit["defense_base"],
+                ":resistance" => $unit["resistance_base"]
             ];
 
             return $preparedQuery->execute($dataArray);

@@ -67,7 +67,7 @@ if (isset($_SESSION["errors"])) {
                     <label for="skill_growth">Skill</label>
                     <input type="number" class="form-control" id="skill_growth" name="skill_growth" placeholder="SKL Growth Rate" value="<?= $_SESSION["formData"]["skill_growth"] ?? 10 ?>" required>
                 </div>
-                <?= isset($errors["magic_growth"]) ? '<div class="alert alert-danger" role="alert">' . showErrors($errors, "magic_growth") . '</div>' : ""; ?>
+                <?= isset($errors["skill_growth"]) ? '<div class="alert alert-danger" role="alert">' . showErrors($errors, "skill_growth") . '</div>' : ""; ?>
                 <div class="form-group">
                     <label for="speed_growth">Speed</label>
                     <input type="number" class="form-control" id="speed_growth" name="speed_growth" placeholder="SPD Growth Rate" value="<?= $_SESSION["formData"]["speed_growth"] ?? 10 ?>" required>

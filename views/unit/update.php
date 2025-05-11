@@ -1,6 +1,12 @@
 <?php
 require_once "assets/php/functions.php";
 require_once "controllers/classController.php";
+require_once "controllers/unitController.php";
+
+if(!isset($_REQUEST["id"])){
+    header("location:index.php?table=unit&action=list");
+    exit();
+}
 
 $errors = [];
 $previousFormData = [];
@@ -14,7 +20,9 @@ if (isset($_SESSION["errors"])) {
 }
 
 $classController = new ClassController();
+$unitController = new UnitController();
 $classes = $classController->list();
+$unitData = $unitController->read($_REQUEST["id"]);
 ?>
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -24,9 +32,11 @@ $classes = $classController->list();
     <div id="content">
         <div class="alert alert-danger" style="display: <?= $errorVisibility ?>;"> <?= $errorString ?> </div>
         <form id="insertion-form" action="index.php?table=unit&action=store&event=create" method="POST">
+            <input type="hidden" id="id" name="id" value="<?= $unitData->id ?>">
+            <input type="hidden" id="previousName" name="previousName" value="<?= $unitData->name ?>">
             <div class="form-group">
                 <label for="username">Name</label>
-                <input type="text" class="form-control" id="name" name="name" aria-describedby="Name" placeholder="Write a name for the unit" value="<?= $_SESSION["formData"]["name"] ?? "" ?>" required>
+                <input type="text" class="form-control" id="name" name="name" aria-describedby="Name" placeholder="Write a name for the unit" value="<?= $_SESSION["formData"]["name"] ?? $unitData->name ?>" required>
                 <?= isset($errors["name"]) ? '<div class="alert alert-danger" role="alert">' . showErrors($errors, "name") . '</div>' : ""; ?>
             </div>
             <br> <!-- TODO: Remove this -->
