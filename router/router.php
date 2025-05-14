@@ -54,7 +54,8 @@ function router (){
             "show" => "show.php",
             "list" => "list.php",
             "update" => "update.php",
-            "delete" => "delete.php"
+            "delete" => "delete.php",
+            "search" => "search.php"
         ]
     ];
 

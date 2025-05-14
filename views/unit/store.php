@@ -7,7 +7,7 @@ $id = ($_REQUEST["id"]) ?? "";
 $classArrayData = [
     "id" => $id, 
     "name" => $_REQUEST["name"], 
-    "previousName" => $_REQUEST["previousName"], 
+    "previousName" => $_REQUEST["previousName"] ?? "", 
     "class" => $_REQUEST["class"], 
     "level_base" => $_REQUEST["level_base"], 
     "health_base" => $_REQUEST["health_base"], 
@@ -33,5 +33,5 @@ $controller = new UnitController();
 if ($_REQUEST["event"] == "create"){
     $controller->create($classArrayData);
 } else if ($_REQUEST["event"] == "update"){
-    $controller->update($id, $classArrayData);
+    $controller->update($classArrayData);
 }

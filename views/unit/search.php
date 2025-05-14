@@ -1,10 +1,10 @@
 <?php
-require_once "controllers/classController.php";
+require_once "controllers/unitController.php";
 
-$controller = new ClassController();
+$controller = new UnitController();
 $showData = false;
 
-$filteredClasses = [];
+$filteredUnits = [];
 $previousFilterField = $_REQUEST["filterField"] ?? "";
 $previousFilterType = $_REQUEST["filterType"] ?? "";
 
@@ -12,14 +12,14 @@ if (isset($_REQUEST["event"])) {
     $showData = true;
     switch ($_REQUEST["event"]) {
         case "all":
-            $filteredClasses = $controller->listDetailed(true);
+            $filteredUnits = $controller->list(true);
             break;
         case "filter":
             $filterField = $_REQUEST["filterField"] ?? "";
             $filterType = $_REQUEST["filterType"] ?? "";
             $filterInput = $_REQUEST["filterInput"] ?? "";
 
-            $filteredClasses = $controller->search($filterField, $filterType, $filterInput, true);
+            $filteredUnits = $controller->search($filterField, $filterType, $filterInput, true);
             break;
     }
 }
@@ -27,17 +27,17 @@ if (isset($_REQUEST["event"])) {
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h3">Searching Classes</h1>
+        <h1 class="h3">Searching Units</h1>
     </div>
     <div id="content">
         <div>
-            <form action="index.php?table=class&action=search&event=filter" method="POST" class="filterForm">
+            <form action="index.php?table=unit&action=search&event=filter" method="POST" class="filterForm">
                 <div class="form-group filterOptionContainer">
                     <label>Field</label>
                     <select name="filterField" class="form-select">
                         <option value="id" <?= $previousFilterField == "id" ? "selected" : "" ?>>ID</option>
                         <option value="name" <?= $previousFilterField == "name" ? "selected" : "" ?>>Name</option>
-                        <option value="type" <?= $previousFilterField == "type" ? "selected" : "" ?>>Type</option>
+                        <option value="class" <?= $previousFilterField == "class" ? "selected" : "" ?>>Class</option>
                     </select>
                 </div>
                 <div class="form-group filterOptionContainer">
@@ -55,7 +55,7 @@ if (isset($_REQUEST["event"])) {
                 </div>
                 <button type="submit" class="btn btn-success" name="applyFilter"><i class="fas fa-search"></i> Search</button>
             </form>
-            <form action="index.php?table=class&action=search&event=all" method="POST" class="fullSearchForm">
+            <form action="index.php?table=unit&action=search&event=all" method="POST" class="fullSearchForm">
                 <button type="submit" class="btn btn-info" name="all"><i class="fas fa-list"></i> List all</button>
             </form>
         
@@ -65,7 +65,7 @@ if (isset($_REQUEST["event"])) {
                         echo "<div class='alert alert-primary msgWelcome'>Fill the fields above to make your search</div>";
                     }
                 }else{ 
-                    if(empty($filteredClasses) || count($filteredClasses) < 1){
+                    if(empty($filteredUnits) || count($filteredUnits) < 1){
                         echo "<div class='alert alert-primary msgNoData'>No matching results were found</div>";
                     }else{ ?>
                         <table class="table table-light table-hover">
@@ -73,21 +73,21 @@ if (isset($_REQUEST["event"])) {
                                 <tr>
                                     <th scope="col">ID</th>
                                     <th scope="col">Name</th>
-                                    <th scope="col">Type</th>
+                                    <th scope="col">Class</th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($filteredClasses as $filteredClass) :
-                                    $id = $filteredClass->id;
+                                <?php foreach ($filteredUnits as $filteredUnit) :
+                                    $id = $filteredUnit->id;
                                 ?>
                                     <tr>
                                         <th scope="row"><?= $id ?></th>
-                                        <td><?= $filteredClass->name ?></td>
-                                        <td><?= $filteredClass->type ?></td>
+                                        <td><?= $filteredUnit->name ?></td>
+                                        <td><?= $filteredUnit->class ?></td>
                                         <td>
-                                            <a class="btn btn-warning" href="index.php?table=class&action=show&id=<?= $filteredClass->id ?>"><i class="fa fa-eye"></i> Show</a>     
-                                            <a class="btn btn-success" href="index.php?table=class&action=update&id=<?= $id ?>"><i class='fas fa-pencil-alt'></i> Edit</a>
+                                            <a class="btn btn-warning" href="index.php?table=unit&action=show&id=<?= $filteredUnit->id ?>"><i class="fa fa-eye"></i> Show</a>     
+                                            <a class="btn btn-success" href="index.php?table=unit&action=update&id=<?= $filteredUnit->id ?>"><i class='fas fa-pencil-alt'></i> Edit</a>
                                             <?php
                                             // $deletionAllowed = "";
                                             // $deletionRoute = "index.php?table=class&action=delete&id={$id}";
@@ -97,7 +97,7 @@ if (isset($_REQUEST["event"])) {
                                             // }
                                             ?>
                                             <!-- <a class="btn btn-danger <?= $habilitado ?>" href="<?= $rutaDeAccion ?>"><i class="fa fa-trash"></i> Borrar</a> -->
-                                            <a class="btn btn-danger" href="index.php?table=class&action=delete&id=<?= $filteredClass->id ?>"><i class="fa fa-trash"></i> Delete</a>
+                                            <a class="btn btn-danger" href="index.php?table=unit&action=delete&id=<?= $filteredUnit->id ?>"><i class="fa fa-trash"></i> Delete</a>
                                         </td>
                                     </tr>
                                 <?php

@@ -35,7 +35,14 @@ $classes = $classController->list();
                 <select id="class" name="class">
                     <?php 
                     foreach($classes as $class){
-                        echo "<option value=" . $class->id . ">" . $class->name . "</option>";
+                        $isSelected = "";
+
+                        if (isset($_SESSION["formData"]["class"])){
+                            if($_SESSION["formData"]["class"] == $class->id){
+                                $isSelected = "selected";
+                            }
+                        }
+                        echo "<option value=" . $class->id . " " . $isSelected .">" . $class->name . "</option>";
                     }
                     ?>
                 </select>

@@ -38,9 +38,9 @@ class UserUnitModel implements BaseModel{
     }
 
     /**
-     * Returns a UserUnit standard object if a matching row was found, else null is returned
+     * TODO: CHANGE THIS Returns a UserUnit standard object if a matching row was found, else null is returned
     */
-    public function findByUserId(int $userId): stdClass | null {
+    public function findByUserId(int $userId): array | null{
         $sqlQuery = "SELECT * FROM `user_unit` WHERE `user_id` = :id";
         $preparedQuery = $this->connection->prepare($sqlQuery);
         $dataArray = [
@@ -51,15 +51,15 @@ class UserUnitModel implements BaseModel{
         if (!$result) {
             return null;
         }else{
-            $userUnit = $preparedQuery->fetch(PDO::FETCH_OBJ);
-            return ($userUnit != false) ? $userUnit : null;
+            $userUnits = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
+            return $userUnits;
         }
     }
 
     /**
-     * Returns a UserUnit standard object if a matching row was found, else null is returned
+     * TODO: CHANGE THIS Returns a UserUnit standard object if a matching row was found, else null is returned
     */
-    public function findByUnitId(int $unitId): stdClass | null {
+    public function findByUnitId(int $unitId): array | null {
         $sqlQuery = "SELECT * FROM `user_unit` WHERE `unit_id` = :id";
         $preparedQuery = $this->connection->prepare($sqlQuery);
         $dataArray = [
@@ -70,8 +70,8 @@ class UserUnitModel implements BaseModel{
         if (!$result) {
             return null;
         }else{
-            $userUnit = $preparedQuery->fetch(PDO::FETCH_OBJ);
-            return ($userUnit != false) ? $userUnit : null;
+            $userUnits = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
+            return $userUnits;
         }
     }
 

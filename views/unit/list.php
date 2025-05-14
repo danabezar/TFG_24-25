@@ -44,15 +44,15 @@ $tableVisibility = "hidden";
                             </th>
                             <td><?= $unit->name ?></td>
                             <td><?= $unit->class ?></td>
-                            <td><?= $unit->base_level ?></td>
-                            <td><?= $unit->base_health ?></td>
-                            <td><?= $unit->base_strength ?></td>
-                            <td><?= $unit->base_magic ?></td>
-                            <td><?= $unit->base_skill ?></td>
-                            <td><?= $unit->base_speed ?></td>
-                            <td><?= $unit->base_luck ?></td>
-                            <td><?= $unit->base_defense ?></td>
-                            <td><?= $unit->base_resistance ?></td>
+                            <td><?= $unit->level_base ?></td>
+                            <td><?= $unit->health_base ?></td>
+                            <td><?= $unit->strength_base ?></td>
+                            <td><?= $unit->magic_base ?></td>
+                            <td><?= $unit->skill_base ?></td>
+                            <td><?= $unit->speed_base ?></td>
+                            <td><?= $unit->luck_base ?></td>
+                            <td><?= $unit->defense_base ?></td>
+                            <td><?= $unit->resistance_base ?></td>
                             <td>
                                 <a class="btn btn-warning" href="index.php?table=unit&action=show&id=<?= $id ?>"><i class="fa fa-eye"></i> Show</a>
                                 <a class="btn btn-success" href="index.php?table=unit&action=update&id=<?= $id ?>"><i class="fa fa-pencil"></i> Edit</a>

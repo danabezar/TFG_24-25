@@ -103,16 +103,22 @@ class UnitModel implements BaseModel{
     */
     public function findByIdDetailed(int $id): stdClass | null {
         $sqlQuery = "
-            SELECT u.`id`, u.`name`, c.`name` AS `class`, b.`level` AS `base_level`, 
-            b.`health` AS `base_health`, b.`strength` AS `base_strength`, 
-            b.`magic` AS `base_magic`, b.`skill` AS `base_skill`, 
-            b.`speed` AS `base_speed`, b.`luck` AS `base_luck`, 
-            b.`defense` AS `base_defense`, b.`resistance` AS `base_resistance` 
+            SELECT u.`id`, u.`name`, c.`id` AS `classId`, c.`name` AS `class`, b.`level` AS `level_base`, 
+            b.`health` AS `health_base`, b.`strength` AS `strength_base`, 
+            b.`magic` AS `magic_base`, b.`skill` AS `skill_base`, 
+            b.`speed` AS `speed_base`, b.`luck` AS `luck_base`, 
+            b.`defense` AS `defense_base`, b.`resistance` AS `resistance_base`, 
+            g.`health` AS `health_growth`, g.`strength` AS `strength_growth`, 
+            g.`magic` AS `magic_growth`, g.`skill` AS `skill_growth`, 
+            g.`speed` AS `speed_growth`, g.`luck` AS `luck_growth`, 
+            g.`defense` AS `defense_growth`, g.`resistance` AS `resistance_growth` 
             FROM `unit` u 
-            LEFT JOIN `unit_base_stats` b 
-            ON (u.`id` = b.`unit_id`)
             LEFT JOIN `class` c 
-            ON (c.`id` = u.`class_id`)
+            ON (c.`id` = u.`class_id`) 
+            LEFT JOIN `unit_base_stats` b 
+            ON (u.`id` = b.`unit_id`) 
+            LEFT JOIN `unit_growths` g
+            ON (u.`id` = g.`unit_id`) 
             WHERE u.`id` = :id;
         ";
         $preparedQuery = $this->connection->prepare($sqlQuery);
@@ -153,16 +159,22 @@ class UnitModel implements BaseModel{
     */
     public function readAllDetailed(): array | null{
         $sqlQuery = "
-            SELECT u.`id`, u.`name`, c.`name` AS `class`, b.`level` AS `base_level`, 
-            b.`health` AS `base_health`, b.`strength` AS `base_strength`, 
-            b.`magic` AS `base_magic`, b.`skill` AS `base_skill`, 
-            b.`speed` AS `base_speed`, b.`luck` AS `base_luck`, 
-            b.`defense` AS `base_defense`, b.`resistance` AS `base_resistance` 
+            SELECT u.`id`, u.`name`, c.`id` AS `classId`, c.`name` AS `class`, b.`level` AS `level_base`, 
+            b.`health` AS `health_base`, b.`strength` AS `strength_base`, 
+            b.`magic` AS `magic_base`, b.`skill` AS `skill_base`, 
+            b.`speed` AS `speed_base`, b.`luck` AS `luck_base`, 
+            b.`defense` AS `defense_base`, b.`resistance` AS `resistance_base`, 
+            g.`health` AS `health_growth`, g.`strength` AS `strength_growth`, 
+            g.`magic` AS `magic_growth`, g.`skill` AS `skill_growth`, 
+            g.`speed` AS `speed_growth`, g.`luck` AS `luck_growth`, 
+            g.`defense` AS `defense_growth`, g.`resistance` AS `resistance_growth` 
             FROM `unit` u 
-            LEFT JOIN `unit_base_stats` b 
-            ON (u.`id` = b.`unit_id`)
             LEFT JOIN `class` c 
             ON (c.`id` = u.`class_id`) 
+            LEFT JOIN `unit_base_stats` b 
+            ON (u.`id` = b.`unit_id`) 
+            LEFT JOIN `unit_growths` g 
+            ON (u.`id` = g.`unit_id`) 
             ORDER BY u.`id`;
         ";
         $preparedQuery = $this->connection->prepare($sqlQuery);
@@ -190,7 +202,7 @@ class UnitModel implements BaseModel{
             $dataArray = [
                 ":id" => $id,
                 ":newName" => $unit['name'],
-                ":newClassId" => $unit["class_id"]
+                ":newClassId" => $unit["class"]
             ];
 
             return $preparedQuery->execute($dataArray);
@@ -224,6 +236,21 @@ class UnitModel implements BaseModel{
      * Returns a series of rows which match the conditions sent via parameters
     */
     public function search(string $field, string $searchType, string $searchString): array | null{
+        if($field == "class"){
+            $field = "c.name";
+        }
+
+        switch($field){
+            case "name":
+                $field = "u.`name`";
+                break;
+            case "class":
+                $field = "c.`name`";
+                break;
+            default:
+                break;
+        }
+
         switch ($searchType) {
             case "begins":
                 $condition = "{$searchString}%";
@@ -239,7 +266,26 @@ class UnitModel implements BaseModel{
                 break;
         }
 
-        $sqlQuery = "SELECT * FROM unit WHERE {$field} LIKE :conditionedSearch";
+        $sqlQuery = "
+            SELECT u.`id`, u.`name`, c.`id` AS `classId`, c.`name` AS `class`, b.`level` AS `level_base`, 
+            b.`health` AS `health_base`, b.`strength` AS `strength_base`, 
+            b.`magic` AS `magic_base`, b.`skill` AS `skill_base`, 
+            b.`speed` AS `speed_base`, b.`luck` AS `luck_base`, 
+            b.`defense` AS `defense_base`, b.`resistance` AS `resistance_base`, 
+            g.`health` AS `health_growth`, g.`strength` AS `strength_growth`, 
+            g.`magic` AS `magic_growth`, g.`skill` AS `skill_growth`, 
+            g.`speed` AS `speed_growth`, g.`luck` AS `luck_growth`, 
+            g.`defense` AS `defense_growth`, g.`resistance` AS `resistance_growth` 
+            FROM `unit` u 
+            LEFT JOIN `class` c 
+            ON (c.`id` = u.`class_id`) 
+            LEFT JOIN `unit_base_stats` b 
+            ON (u.`id` = b.`unit_id`) 
+            LEFT JOIN `unit_growths` g 
+            ON (u.`id` = g.`unit_id`) 
+            WHERE {$field} LIKE :conditionedSearch
+            ORDER BY u.`id`; 
+        ";
         $preparedQuery = $this->connection->prepare($sqlQuery);
         $dataArray = [
             ":conditionedSearch" => $condition
