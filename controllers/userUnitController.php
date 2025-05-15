@@ -2,7 +2,7 @@
 require_once "models/userUnitModel.php";
 require_once "assets/php/functions.php";
 
-class userUnitController{
+class UserUnitController{
     private $model;
 
     public function __construct(){
@@ -39,7 +39,7 @@ class userUnitController{
                 $newUserUnitGainsId = $this->model->addStatGains($newUserUnitId, $userUnitDataArray);
 
                 if($newUserUnitGainsId != null){
-                    header("location:index.php?table=user&action=showUnit&id=" . $newUserUnitId);
+                    header("location:index.php?table=user&action=showUnit&userId=" . $userUnitDataArray["userId"] . "&userUnitId=" . $newUserUnitId);
                     exit();
                 }else{
                     header("location:index.php?table=user&action=addUnit&userId=" . $userUnitDataArray["userId"] . "&error=true");
@@ -75,6 +75,25 @@ class userUnitController{
         return $userUnits;
     }
 
+    //TODO: Add comment
+    public function listAvailableForUser(int $userId): array | null {
+        return $this->model->readAllAvailableForUser($userId);
+    }
+
+    public function listAvailableSkills(int $userUnitId): array | null {
+        return $this->model->readAllSkillsAvailable($userUnitId);
+    }
+
+    //TODO: Add comment
+    public function getStatGainsById(int $userUnitId): stdClass | null {
+        return $this->model->getStatGainsById($userUnitId);
+    }
+
+    //TODO: Add comment
+    public function getSkillsById(int $userUnitId): array | null {
+        return $this->model->getSkillsById($userUnitId);
+    }
+
 
     //TODO: Add comment
     public function update(array $userUnitDataArray): void{
@@ -104,18 +123,18 @@ class userUnitController{
                 $successfulGainsUpdate = $this->model->updateStatGains($userUnitDataArray["userUnitId"], $userUnitDataArray);
 
                 if($successfulGainsUpdate){
-                    header("location:index.php?table=user&action=showUnit&id=" . $userUnitDataArray["userUnitId"]);
+                    header("location:index.php?table=user&action=showUnit&userId=" . $userUnitDataArray["userId"] .  "&userUnitId=" . $userUnitDataArray["userUnitId"]);
                     exit();
                 }else{
-                    header("location:index.php?table=user&action=updateUnit&id=" . $userUnitDataArray["userUnitId"] . "&error=true");
+                    header("location:index.php?table=user&action=updateUnit&userId=" . $userUnitDataArray["userId"] .  "&userUnitId=" . $userUnitDataArray["userUnitId"] . "&error=true");
                     exit();
                 }
             }else{
-                header("location:index.php?table=user&action=updateUnit&id=" . $userUnitDataArray["userUnitId"] . "&error=true");
+                header("location:index.php?table=user&action=updateUnit&userId=" . $userUnitDataArray["userId"] .  "&userUnitId=" . $userUnitDataArray["userUnitId"] . "&error=true");
                 exit();
             }
         }else{
-            header("location:index.php?table=user&action=updateUnit&id=" . $userUnitDataArray["userUnitId"] . "&error=true");
+            header("location:index.php?table=user&action=updateUnit&userId=" . $userUnitDataArray["userId"] .  "&userUnitId=" . $userUnitDataArray["userUnitId"] . "&error=true");
             exit();
         }
     }
@@ -125,5 +144,15 @@ class userUnitController{
         $this->model->delete($userUnitId);
         header("location:index.php?table=user&action=show&id=" . $userId);
         exit();
+    }
+
+    //TODO: ADD CHECKS OR SOMETHING, THERE'S NOTHING HERE
+    public function addSkill($userUnitId, $skillId): int | null {
+        return $this->model->addSkill($userUnitId, $skillId);
+    }
+
+    //TODO: NOT FINISHED
+    public function removeSkill($userUnitId, $skillId): bool {
+        return $this->model->removeSkill($userUnitId, $skillId);
     }
 }

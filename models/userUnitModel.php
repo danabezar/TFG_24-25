@@ -160,7 +160,8 @@ class UserUnitModel implements BaseModel{
             LEFT JOIN unit_growths ug ON (u.id = ug.unit_id) 
             LEFT JOIN class c ON (u.`class_id` = c.`id`) 
             LEFT JOIN class_growths cg ON (c.id = cg.class_id) 
-            WHERE uu.`user_id` = :userId;
+            WHERE uu.`user_id` = :userId
+            ORDER BY uu.`unit_id`;
         ";
         $preparedQuery = $this->connection->prepare($sqlQuery);
         $dataArray = [
@@ -197,7 +198,8 @@ class UserUnitModel implements BaseModel{
             LEFT JOIN unit_growths ug ON (u.id = ug.unit_id) 
             LEFT JOIN class c ON (u.`class_id` = c.`id`) 
             LEFT JOIN class_growths cg ON (c.id = cg.class_id) 
-            WHERE uu.`unit_id` = :unitId;
+            WHERE uu.`unit_id` = :unitId
+            ORDER BY uu.`unit_id`;
         ";
         $preparedQuery = $this->connection->prepare($sqlQuery);
         $dataArray = [
@@ -210,6 +212,46 @@ class UserUnitModel implements BaseModel{
         }else{
             $userUnits = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
             return $userUnits;
+        }
+    }
+
+    //TODO: Add comment
+    public function readAllAvailableForUser(int $userId): array | null {
+        $sqlQuery = "
+            SELECT * FROM `unit` WHERE `id` NOT IN 
+            (SELECT `unit_id` FROM user_unit WHERE `user_id` = :userId);
+        ";
+        $preparedQuery = $this->connection->prepare($sqlQuery);
+        $dataArray = [
+            ":userId" => $userId
+        ];
+        $result = $preparedQuery->execute($dataArray);
+        
+        if (!$result) {
+            return null;
+        }else{
+            $units = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
+            return $units;
+        }
+    }
+
+    //TODO: Add comment
+    public function readAllSkillsAvailable(int $userUnitId): array | null {
+        $sqlQuery = "
+            SELECT * FROM `skill` WHERE `id` NOT IN 
+            (SELECT `skill_id` FROM user_unit_skill WHERE `user_unit_id` = :userUnitId);
+        ";
+        $preparedQuery = $this->connection->prepare($sqlQuery);
+        $dataArray = [
+            ":userUnitId" => $userUnitId
+        ];
+        $result = $preparedQuery->execute($dataArray);
+        
+        if (!$result) {
+            return null;
+        }else{
+            $skills = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
+            return $skills;
         }
     }
 
@@ -354,10 +396,10 @@ class UserUnitModel implements BaseModel{
 
     }
 
-    public function getStatGainsById(int $userUnitId): array | null {
+    public function getStatGainsById(int $userUnitId): stdClass | null {
         $sqlQuery = "
             SELECT * FROM `user_unit_stat_gains` 
-            WHERE `id` = :id;
+            WHERE `user_unit_id` = :id;
         ";
         $preparedQuery = $this->connection->prepare($sqlQuery);
         $dataArray = [
@@ -368,7 +410,7 @@ class UserUnitModel implements BaseModel{
         if (!$result) {
             return null;
         } else {
-            $userUnitStatGains = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
+            $userUnitStatGains = $preparedQuery->fetch(PDO::FETCH_OBJ);
             return $userUnitStatGains;
         }
     }
@@ -438,8 +480,10 @@ class UserUnitModel implements BaseModel{
 
     public function getSkillsById(int $userUnitId): array | null {
         $sqlQuery = "
-            SELECT * FROM `user_unit_skill` 
-            WHERE `user_unit_id` = :id;
+            SELECT uus.`id`, uus.`skill_id`, s.`name`, s.`type`, s.`attribute`, s.`value` 
+            FROM `user_unit_skill` uus 
+            LEFT JOIN skill s ON (uus.`skill_id` = s.`id`) 
+            WHERE uus.`user_unit_id` = :id;
         ";
         $preparedQuery = $this->connection->prepare($sqlQuery);
         $dataArray = [

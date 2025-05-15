@@ -30,7 +30,11 @@ function router (){
             "addUnit" => "addUnit.php",
             "updateUnit" => "updateUnit.php",
             "deleteUnit" => "deleteUnit.php",
-            "storeUnit" => "storeUnit.php"
+            "storeUnit" => "storeUnit.php",
+            "showUnit" => "showUnit.php",
+            "addUnitSkill" => "addUnitSkill.php",
+            "deleteUnitSkill" => "deleteUnitSkill.php",
+            "storeSkill" => "storeSkill.php"
         ],
         "class" => [
             "create" => "create.php",
