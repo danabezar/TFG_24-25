@@ -26,7 +26,11 @@ function router (){
             "store" => "store.php",
             "show" => "show.php",
             "list" => "list.php",
-            "delete" => "delete.php"
+            "delete" => "delete.php",
+            "addUnit" => "addUnit.php",
+            "updateUnit" => "updateUnit.php",
+            "deleteUnit" => "deleteUnit.php",
+            "storeUnit" => "storeUnit.php"
         ],
         "class" => [
             "create" => "create.php",

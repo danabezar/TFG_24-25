@@ -96,6 +96,7 @@ class UnitController{
             "strength_base", 
             "magic_base", 
             "skill_base", 
+            "speed_base", 
             "luck_base", 
             "defense_base", 
             "resistance_base", 

@@ -15,14 +15,15 @@ class UserUnitModel implements BaseModel{
     public function insert(array $userUnit): int | null {
         try {
             $sqlQuery = "
-                INSERT INTO `user_unit`(`user_id`, `unit_id`, `level`) 
-                VALUES (:userId, :unitId, :level);
+                INSERT INTO `user_unit`(`user_id`, `unit_id`, `level`, `experience`) 
+                VALUES (:userId, :unitId, :level, :experience);
             ";
             $preparedQuery = $this->connection->prepare($sqlQuery);
             $dataArray = [
                 ":userId" => $userUnit["userId"],
                 ":unitId" => $userUnit["unitId"],
-                ":level" => $userUnit["level"]
+                ":level" => $userUnit["level"],
+                ":experience" => $userUnit["experience"]
             ];
             $result = $preparedQuery->execute($dataArray);
             
@@ -32,46 +33,55 @@ class UserUnitModel implements BaseModel{
         }
     }
 
-    //TODO: Hacer esto
+    //TODO: CHANGE COMMENT
     public function findById(int $id): stdClass | null {
-        return null;
-    }
-
-    /**
-     * TODO: CHANGE THIS Returns a UserUnit standard object if a matching row was found, else null is returned
-    */
-    public function findByUserId(int $userId): array | null{
-        $sqlQuery = "SELECT * FROM `user_unit` WHERE `user_id` = :id";
+        $sqlQuery = "SELECT * FROM `user_unit` WHERE `id` = :id";
         $preparedQuery = $this->connection->prepare($sqlQuery);
         $dataArray = [
-            ":id" => $userId
+            ":id" => $id
         ];
         $result = $preparedQuery->execute($dataArray);
         
         if (!$result) {
             return null;
         }else{
-            $userUnits = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
-            return $userUnits;
+            $userUnit = $preparedQuery->fetch(PDO::FETCH_OBJ);
+            return $userUnit;
         }
     }
 
-    /**
-     * TODO: CHANGE THIS Returns a UserUnit standard object if a matching row was found, else null is returned
-    */
-    public function findByUnitId(int $unitId): array | null {
-        $sqlQuery = "SELECT * FROM `user_unit` WHERE `unit_id` = :id";
+    //TODO: CHANGE COMMENT
+    public function findByIdDetailed(int $id): stdClass | null {
+        $sqlQuery = "
+        SELECT uu.`id`, u.`name`, u.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
+            (ubs.`health` + uusg.`health`) AS `health_stat`, (ubs.`strength` + uusg.`strength`) AS `strength_stat`, 
+            (ubs.`magic` + uusg.`magic`) AS `magic_stat`, (ubs.`skill` + uusg.`skill`) AS `skill_stat`, 
+            (ubs.`speed` + uusg.`speed`) AS `speed_stat`, (ubs.`luck` + uusg.`luck`) AS `luck_stat`, 
+            (ubs.`defense` + uusg.`defense`) AS `defense_stat`, (ubs.`resistance` + uusg.`resistance`) AS `resistance_stat`, 
+            (cg.`health` + ug.`health`) AS `health_growth`, (cg.`strength` + ug.`strength`) AS `strength_growth`, 
+            (cg.`magic` + ug.`magic`) AS `magic_growth`, (cg.`skill` + ug.`skill`) AS `skill_growth`, 
+            (cg.`speed` + ug.`speed`) AS `speed_growth`, (cg.`luck` + ug.`luck`) AS `luck_growth`, 
+            (cg.`defense` + ug.`defense`) AS `defense_growth`, (cg.`resistance` + ug.`resistance`) AS `resistance_growth` 
+            FROM user_unit uu 
+            LEFT JOIN user_unit_stat_gains uusg ON (uu.`id` = uusg.`user_unit_id`) 
+            LEFT JOIN unit u ON (uu.`unit_id` = u.`id`) 
+            LEFT JOIN unit_base_stats ubs ON (u.`id` = ubs.`unit_id`) 
+            LEFT JOIN unit_growths ug ON (u.id = ug.unit_id) 
+            LEFT JOIN class c ON (u.`class_id` = c.`id`) 
+            LEFT JOIN class_growths cg ON (c.id = cg.class_id) 
+            WHERE uu.`id` = :id
+        ";
         $preparedQuery = $this->connection->prepare($sqlQuery);
         $dataArray = [
-            ":id" => $unitId
+            ":id" => $id
         ];
         $result = $preparedQuery->execute($dataArray);
         
         if (!$result) {
             return null;
         }else{
-            $userUnits = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
-            return $userUnits;
+            $userUnit = $preparedQuery->fetch(PDO::FETCH_OBJ);
+            return $userUnit;
         }
     }
 
@@ -98,28 +108,110 @@ class UserUnitModel implements BaseModel{
         }
     }
 
-    /**
-     * Returns an array with all the UserUnits or null if none were found
-    */
+    //TODO: Add comment
     public function readAll(): array | null{
         $sqlQuery = "
-            SELECT * FROM `user_unit` 
-            ORDER BY `id`;
+            SELECT uu.`id`, u.`name`, u.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
+            (ubs.`health` + uusg.`health`) AS `health_stat`, (ubs.`strength` + uusg.`strength`) AS `strength_stat`, 
+            (ubs.`magic` + uusg.`magic`) AS `magic_stat`, (ubs.`skill` + uusg.`skill`) AS `skill_stat`, 
+            (ubs.`speed` + uusg.`speed`) AS `speed_stat`, (ubs.`luck` + uusg.`luck`) AS `luck_stat`, 
+            (ubs.`defense` + uusg.`defense`) AS `defense_stat`, (ubs.`resistance` + uusg.`resistance`) AS `resistance_stat`, 
+            (cg.`health` + ug.`health`) AS `health_growth`, (cg.`strength` + ug.`strength`) AS `strength_growth`, 
+            (cg.`magic` + ug.`magic`) AS `magic_growth`, (cg.`skill` + ug.`skill`) AS `skill_growth`, 
+            (cg.`speed` + ug.`speed`) AS `speed_growth`, (cg.`luck` + ug.`luck`) AS `luck_growth`, 
+            (cg.`defense` + ug.`defense`) AS `defense_growth`, (cg.`resistance` + ug.`resistance`) AS `resistance_growth` 
+            FROM user_unit uu 
+            LEFT JOIN user_unit_stat_gains uusg ON (uu.`id` = uusg.`user_unit_id`) 
+            LEFT JOIN unit u ON (uu.`unit_id` = u.`id`) 
+            LEFT JOIN unit_base_stats ubs ON (u.`id` = ubs.`unit_id`) 
+            LEFT JOIN unit_growths ug ON (u.id = ug.unit_id) 
+            LEFT JOIN class c ON (u.`class_id` = c.`id`) 
+            LEFT JOIN class_growths cg ON (c.id = cg.class_id);
         ";
         $preparedQuery = $this->connection->prepare($sqlQuery);
         $result = $preparedQuery->execute();
-
+        
         if (!$result) {
             return null;
-        } else {
+        }else{
             $userUnits = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
             return $userUnits;
         }
     }
 
     /**
-     * TODO: Add detailed readAll
-     */
+     * TODO: Add comment
+    */
+    public function readAllByUserId(int $userId): array | null{
+        $sqlQuery = "
+            SELECT uu.`id`, u.`name`, u.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
+            (ubs.`health` + uusg.`health`) AS `health_stat`, (ubs.`strength` + uusg.`strength`) AS `strength_stat`, 
+            (ubs.`magic` + uusg.`magic`) AS `magic_stat`, (ubs.`skill` + uusg.`skill`) AS `skill_stat`, 
+            (ubs.`speed` + uusg.`speed`) AS `speed_stat`, (ubs.`luck` + uusg.`luck`) AS `luck_stat`, 
+            (ubs.`defense` + uusg.`defense`) AS `defense_stat`, (ubs.`resistance` + uusg.`resistance`) AS `resistance_stat`, 
+            (cg.`health` + ug.`health`) AS `health_growth`, (cg.`strength` + ug.`strength`) AS `strength_growth`, 
+            (cg.`magic` + ug.`magic`) AS `magic_growth`, (cg.`skill` + ug.`skill`) AS `skill_growth`, 
+            (cg.`speed` + ug.`speed`) AS `speed_growth`, (cg.`luck` + ug.`luck`) AS `luck_growth`, 
+            (cg.`defense` + ug.`defense`) AS `defense_growth`, (cg.`resistance` + ug.`resistance`) AS `resistance_growth` 
+            FROM user_unit uu 
+            LEFT JOIN user_unit_stat_gains uusg ON (uu.`id` = uusg.`user_unit_id`) 
+            LEFT JOIN unit u ON (uu.`unit_id` = u.`id`) 
+            LEFT JOIN unit_base_stats ubs ON (u.`id` = ubs.`unit_id`) 
+            LEFT JOIN unit_growths ug ON (u.id = ug.unit_id) 
+            LEFT JOIN class c ON (u.`class_id` = c.`id`) 
+            LEFT JOIN class_growths cg ON (c.id = cg.class_id) 
+            WHERE uu.`user_id` = :userId;
+        ";
+        $preparedQuery = $this->connection->prepare($sqlQuery);
+        $dataArray = [
+            ":userId" => $userId
+        ];
+        $result = $preparedQuery->execute($dataArray);
+        
+        if (!$result) {
+            return null;
+        }else{
+            $userUnits = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
+            return $userUnits;
+        }
+    }
+
+    /**
+     * TODO: Add comment
+    */
+    public function readAllByUnitId(int $unitId): array | null {
+        $sqlQuery = "
+            SELECT uu.`id`, u.`name`, u.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
+            (ubs.`health` + uusg.`health`) AS `health_stat`, (ubs.`strength` + uusg.`strength`) AS `strength_stat`, 
+            (ubs.`magic` + uusg.`magic`) AS `magic_stat`, (ubs.`skill` + uusg.`skill`) AS `skill_stat`, 
+            (ubs.`speed` + uusg.`speed`) AS `speed_stat`, (ubs.`luck` + uusg.`luck`) AS `luck_stat`, 
+            (ubs.`defense` + uusg.`defense`) AS `defense_stat`, (ubs.`resistance` + uusg.`resistance`) AS `resistance_stat`, 
+            (cg.`health` + ug.`health`) AS `health_growth`, (cg.`strength` + ug.`strength`) AS `strength_growth`, 
+            (cg.`magic` + ug.`magic`) AS `magic_growth`, (cg.`skill` + ug.`skill`) AS `skill_growth`, 
+            (cg.`speed` + ug.`speed`) AS `speed_growth`, (cg.`luck` + ug.`luck`) AS `luck_growth`, 
+            (cg.`defense` + ug.`defense`) AS `defense_growth`, (cg.`resistance` + ug.`resistance`) AS `resistance_growth` 
+            FROM user_unit uu 
+            LEFT JOIN user_unit_stat_gains uusg ON (uu.`id` = uusg.`user_unit_id`) 
+            LEFT JOIN unit u ON (uu.`unit_id` = u.`id`) 
+            LEFT JOIN unit_base_stats ubs ON (u.`id` = ubs.`unit_id`) 
+            LEFT JOIN unit_growths ug ON (u.id = ug.unit_id) 
+            LEFT JOIN class c ON (u.`class_id` = c.`id`) 
+            LEFT JOIN class_growths cg ON (c.id = cg.class_id) 
+            WHERE uu.`unit_id` = :unitId;
+        ";
+        $preparedQuery = $this->connection->prepare($sqlQuery);
+        $dataArray = [
+            ":unitId" => $unitId
+        ];
+        $result = $preparedQuery->execute($dataArray);
+        
+        if (!$result) {
+            return null;
+        }else{
+            $userUnits = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
+            return $userUnits;
+        }
+    }
 
     /**
      * TODO: Add comment
@@ -127,15 +219,14 @@ class UserUnitModel implements BaseModel{
     public function update(int $userUnitId, array $userUnit): bool {
         try {
             $sqlQuery = "
-                UPDATE `user_unit` SET `user_id` = :userId, 
-                `unit_id` = :unitId 
+                UPDATE `user_unit` SET `level` = :level, `experience` = :experience 
                 WHERE `id` = :userUnitId;
             ";
             $preparedQuery = $this->connection->prepare($sqlQuery);
             $dataArray = [
                 ":userUnitId" => $userUnitId,
-                ":userId" => $userUnit['user_id'],
-                ":unitId" => $userUnit['unit_id']
+                ":level" => $userUnit['level'],
+                ":experience" => $userUnit['experience']
             ];
 
             return $preparedQuery->execute($dataArray);
@@ -166,9 +257,20 @@ class UserUnitModel implements BaseModel{
     }
 
     /*
-     * TODO: CHANGE WHEN DETAILED READALL HAS BEEN ADDED
+     * TODO: Add comment
     */
     public function search(string $field, string $searchType, string $searchString): array | null{
+        switch($field){
+            case "name":
+                $field = "u.`name`";
+                break;
+            case "class":
+                $field = "c.`name`";
+                break;
+            default:
+                break;
+        }
+
         switch ($searchType) {
             case "begins":
                 $condition = "{$searchString}%";
@@ -184,7 +286,13 @@ class UserUnitModel implements BaseModel{
                 break;
         }
 
-        $sqlQuery = "SELECT * FROM unit WHERE {$field} LIKE :conditionedSearch";
+        $sqlQuery = "
+            SELECT uu.`id`, u.`name`, u.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience` 
+            FROM user_unit uu 
+            LEFT JOIN unit u ON (uu.`unit_id` = u.`id`) 
+            LEFT JOIN class c ON (u.`class_id` = c.`id`) 
+            WHERE {$field} LIKE :conditionedSearch
+        ";
         $preparedQuery = $this->connection->prepare($sqlQuery);
         $dataArray = [
             ":conditionedSearch" => $condition
@@ -194,27 +302,28 @@ class UserUnitModel implements BaseModel{
         if (!$result) {
             return null;
         } else {
-            $units = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
-            return $units;
+            $userUnits = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
+            return $userUnits;
         }
     }
 
     /*
-     * TODO: CHANGE WHEN DETAILED READALL HAS BEEN ADDED
+     * TODO: PENDING
     */
     public function exists(string $field, string $fieldValue): bool{
-        $sqlQuery = "SELECT * FROM unit WHERE $field = :fieldValue";
-        $preparedQuery = $this->connection->prepare($sqlQuery);
-        $dataArray = [
-            ":fieldValue" => $fieldValue
-        ];
+        // $sqlQuery = "SELECT * FROM unit WHERE $field = :fieldValue";
+        // $preparedQuery = $this->connection->prepare($sqlQuery);
+        // $dataArray = [
+        //     ":fieldValue" => $fieldValue
+        // ];
 
-        $result = $preparedQuery->execute($dataArray);
-        if(!$result || $preparedQuery->rowCount() <= 0) {
-            return false;
-        } else {
-            return true;
-        }
+        // $result = $preparedQuery->execute($dataArray);
+        // if(!$result || $preparedQuery->rowCount() <= 0) {
+        //     return false;
+        // } else {
+        //     return true;
+        // }
+        return true;
     }
 
     public function addStatGains(int $userUnitId, $statGains): int | null{

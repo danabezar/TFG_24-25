@@ -236,10 +236,6 @@ class UnitModel implements BaseModel{
      * Returns a series of rows which match the conditions sent via parameters
     */
     public function search(string $field, string $searchType, string $searchString): array | null{
-        if($field == "class"){
-            $field = "c.name";
-        }
-
         switch($field){
             case "name":
                 $field = "u.`name`";
