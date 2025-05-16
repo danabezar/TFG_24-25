@@ -15,13 +15,14 @@ class UserUnitModel implements BaseModel{
     public function insert(array $userUnit): int | null {
         try {
             $sqlQuery = "
-                INSERT INTO `user_unit`(`user_id`, `unit_id`, `level`, `experience`) 
-                VALUES (:userId, :unitId, :level, :experience);
+                INSERT INTO `user_unit`(`user_id`, `unit_id`, `class_id`, `level`, `experience`) 
+                VALUES (:userId, :unitId, :classId, :level, :experience);
             ";
             $preparedQuery = $this->connection->prepare($sqlQuery);
             $dataArray = [
                 ":userId" => $userUnit["userId"],
                 ":unitId" => $userUnit["unitId"],
+                ":classId" => $userUnit["class"],
                 ":level" => $userUnit["level"],
                 ":experience" => $userUnit["experience"]
             ];
@@ -53,7 +54,7 @@ class UserUnitModel implements BaseModel{
     //TODO: CHANGE COMMENT
     public function findByIdDetailed(int $id): stdClass | null {
         $sqlQuery = "
-        SELECT uu.`id`, u.`name`, u.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
+        SELECT uu.`id`, u.`name`, uu.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
             (ubs.`health` + uusg.`health`) AS `health_stat`, (ubs.`strength` + uusg.`strength`) AS `strength_stat`, 
             (ubs.`magic` + uusg.`magic`) AS `magic_stat`, (ubs.`skill` + uusg.`skill`) AS `skill_stat`, 
             (ubs.`speed` + uusg.`speed`) AS `speed_stat`, (ubs.`luck` + uusg.`luck`) AS `luck_stat`, 
@@ -67,7 +68,7 @@ class UserUnitModel implements BaseModel{
             LEFT JOIN unit u ON (uu.`unit_id` = u.`id`) 
             LEFT JOIN unit_base_stats ubs ON (u.`id` = ubs.`unit_id`) 
             LEFT JOIN unit_growths ug ON (u.id = ug.unit_id) 
-            LEFT JOIN class c ON (u.`class_id` = c.`id`) 
+            LEFT JOIN class c ON (uu.`class_id` = c.`id`) 
             LEFT JOIN class_growths cg ON (c.id = cg.class_id) 
             WHERE uu.`id` = :id
         ";
@@ -111,7 +112,7 @@ class UserUnitModel implements BaseModel{
     //TODO: Add comment
     public function readAll(): array | null{
         $sqlQuery = "
-            SELECT uu.`id`, u.`name`, u.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
+            SELECT uu.`id`, u.`name`, uu.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
             (ubs.`health` + uusg.`health`) AS `health_stat`, (ubs.`strength` + uusg.`strength`) AS `strength_stat`, 
             (ubs.`magic` + uusg.`magic`) AS `magic_stat`, (ubs.`skill` + uusg.`skill`) AS `skill_stat`, 
             (ubs.`speed` + uusg.`speed`) AS `speed_stat`, (ubs.`luck` + uusg.`luck`) AS `luck_stat`, 
@@ -125,7 +126,7 @@ class UserUnitModel implements BaseModel{
             LEFT JOIN unit u ON (uu.`unit_id` = u.`id`) 
             LEFT JOIN unit_base_stats ubs ON (u.`id` = ubs.`unit_id`) 
             LEFT JOIN unit_growths ug ON (u.id = ug.unit_id) 
-            LEFT JOIN class c ON (u.`class_id` = c.`id`) 
+            LEFT JOIN class c ON (uu.`class_id` = c.`id`) 
             LEFT JOIN class_growths cg ON (c.id = cg.class_id);
         ";
         $preparedQuery = $this->connection->prepare($sqlQuery);
@@ -144,7 +145,7 @@ class UserUnitModel implements BaseModel{
     */
     public function readAllByUserId(int $userId): array | null{
         $sqlQuery = "
-            SELECT uu.`id`, u.`name`, u.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
+            SELECT uu.`id`, u.`name`, uu.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
             (ubs.`health` + uusg.`health`) AS `health_stat`, (ubs.`strength` + uusg.`strength`) AS `strength_stat`, 
             (ubs.`magic` + uusg.`magic`) AS `magic_stat`, (ubs.`skill` + uusg.`skill`) AS `skill_stat`, 
             (ubs.`speed` + uusg.`speed`) AS `speed_stat`, (ubs.`luck` + uusg.`luck`) AS `luck_stat`, 
@@ -158,7 +159,7 @@ class UserUnitModel implements BaseModel{
             LEFT JOIN unit u ON (uu.`unit_id` = u.`id`) 
             LEFT JOIN unit_base_stats ubs ON (u.`id` = ubs.`unit_id`) 
             LEFT JOIN unit_growths ug ON (u.id = ug.unit_id) 
-            LEFT JOIN class c ON (u.`class_id` = c.`id`) 
+            LEFT JOIN class c ON (uu.`class_id` = c.`id`) 
             LEFT JOIN class_growths cg ON (c.id = cg.class_id) 
             WHERE uu.`user_id` = :userId
             ORDER BY uu.`unit_id`;
@@ -182,7 +183,7 @@ class UserUnitModel implements BaseModel{
     */
     public function readAllByUnitId(int $unitId): array | null {
         $sqlQuery = "
-            SELECT uu.`id`, u.`name`, u.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
+            SELECT uu.`id`, u.`name`, uu.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
             (ubs.`health` + uusg.`health`) AS `health_stat`, (ubs.`strength` + uusg.`strength`) AS `strength_stat`, 
             (ubs.`magic` + uusg.`magic`) AS `magic_stat`, (ubs.`skill` + uusg.`skill`) AS `skill_stat`, 
             (ubs.`speed` + uusg.`speed`) AS `speed_stat`, (ubs.`luck` + uusg.`luck`) AS `luck_stat`, 
@@ -196,7 +197,7 @@ class UserUnitModel implements BaseModel{
             LEFT JOIN unit u ON (uu.`unit_id` = u.`id`) 
             LEFT JOIN unit_base_stats ubs ON (u.`id` = ubs.`unit_id`) 
             LEFT JOIN unit_growths ug ON (u.id = ug.unit_id) 
-            LEFT JOIN class c ON (u.`class_id` = c.`id`) 
+            LEFT JOIN class c ON (uu.`class_id` = c.`id`) 
             LEFT JOIN class_growths cg ON (c.id = cg.class_id) 
             WHERE uu.`unit_id` = :unitId
             ORDER BY uu.`unit_id`;
@@ -261,12 +262,13 @@ class UserUnitModel implements BaseModel{
     public function update(int $userUnitId, array $userUnit): bool {
         try {
             $sqlQuery = "
-                UPDATE `user_unit` SET `level` = :level, `experience` = :experience 
+                UPDATE `user_unit` SET `class_id` = :classId, `level` = :level, `experience` = :experience 
                 WHERE `id` = :userUnitId;
             ";
             $preparedQuery = $this->connection->prepare($sqlQuery);
             $dataArray = [
                 ":userUnitId" => $userUnitId,
+                ":classId" => $userUnit['class'],
                 ":level" => $userUnit['level'],
                 ":experience" => $userUnit['experience']
             ];
@@ -329,10 +331,10 @@ class UserUnitModel implements BaseModel{
         }
 
         $sqlQuery = "
-            SELECT uu.`id`, u.`name`, u.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience` 
+            SELECT uu.`id`, u.`name`, uu.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience` 
             FROM user_unit uu 
             LEFT JOIN unit u ON (uu.`unit_id` = u.`id`) 
-            LEFT JOIN class c ON (u.`class_id` = c.`id`) 
+            LEFT JOIN class c ON (uu.`class_id` = c.`id`) 
             WHERE {$field} LIKE :conditionedSearch
         ";
         $preparedQuery = $this->connection->prepare($sqlQuery);

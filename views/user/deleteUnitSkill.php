@@ -10,9 +10,11 @@ $userId = $_REQUEST["userId"];
 $userUnitId = $_REQUEST["userUnitId"];
 $skillId = $_REQUEST["skillId"];
 
-$controller = new UserUnitController();
-$controller->removeSkill($userUnitId, $skillId);
+$userUnitSkillDataArray = [
+    "userId" => $userId,
+    "userUnitId" => $userUnitId,
+    "skillId" => $skillId
+];
 
-//TODO: THIS REDIRECT IS PENDING TO BE REMOVED
-header("location:index.php?table=user&action=showUnit&userId=" . $userId . "&userUnitId=" . $userUnitId);
-exit();
+$controller = new UserUnitController();
+$controller->removeSkill($userUnitSkillDataArray);

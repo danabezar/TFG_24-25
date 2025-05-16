@@ -27,8 +27,10 @@ $userUnitArrayData = [
 
 if($unitId != null && $unitId != ""){
     $unitData = $unitController->read($unitId);
+    $userUnitArrayData["class"] = $unitData->classId;
     $userUnitArrayData["level"] = $unitData->level_base;
 }else{
+    $userUnitArrayData["class"] = $_REQUEST["class"];
     $userUnitArrayData["level"] = $_REQUEST["level"] ?? "";
 }
 

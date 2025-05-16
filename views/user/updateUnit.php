@@ -1,6 +1,7 @@
 <?php
 require_once "assets/php/functions.php";
 require_once "controllers/userController.php";
+require_once "controllers/classController.php";
 require_once "controllers/unitController.php";
 require_once "controllers/userUnitController.php";
 
@@ -21,12 +22,14 @@ if (isset($_SESSION["errors"])) {
 }
 
 $userController = new UserController();
+$classController = new ClassController();
 $unitController = new UnitController();
 $userUnitController = new UserUnitController();
 
 $user = $userController->read($_REQUEST["userId"]);
 $userUnit = $userUnitController->read($_REQUEST["userUnitId"]);
 $statGains = $userUnitController->getStatGainsById($userUnit->id);
+$classes = $classController->list();
 ?>
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -38,6 +41,25 @@ $statGains = $userUnitController->getStatGainsById($userUnit->id);
         <form id="insertion-form" action="index.php?table=user&action=storeUnit&event=update" method="POST">
             <input type="hidden" id="userId" name="userId" value="<?= $user->id ?>">
             <input type="hidden" id="userUnitId" name="userUnitId" value="<?= $userUnit->id ?>">
+            <div class="form-group">
+                <label for="class">Class</label>
+                <select id="class" name="class">
+                    <?php 
+                    foreach($classes as $class){
+                        $isSelected = "";
+
+                        if (isset($_SESSION["formData"]["class"])){
+                            if($_SESSION["formData"]["class"] == $class->id){
+                                $isSelected = "selected";
+                            }
+                        }else if($userUnit->classId == $class->id){
+                            $isSelected = "selected";
+                        }
+                        echo "<option value=" . $class->id . " " . $isSelected .">" . $class->name . "</option>";
+                    }
+                    ?>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="level">Level</label>
                 <input type="number" class="form-control" id="level" name="level" placeholder="Level" value="<?= $_SESSION["formData"]["level"] ?? $userUnit->level ?>" required>
@@ -93,7 +115,7 @@ $statGains = $userUnitController->getStatGainsById($userUnit->id);
                 <?= isset($errors["resistance_gains"]) ? '<div class="alert alert-danger" role="alert">' . showErrors($errors, "resistance_gains") . '</div>' : ""; ?>
             </div>
 
-            <button type="submit" class="btn btn-primary">Add</button>
+            <button type="submit" class="btn btn-primary">Edit</button>
             <a class="btn btn-danger" href="index.php?table=user&action=show&id=<?= $user->id ?>">Cancel</a>
         </form>
     </div>

@@ -15,16 +15,8 @@ class UserUnitController{
     public function create(array $userUnitDataArray): void{
         $nonNullableFields = [
             "userId", 
-            "unitId", 
-            "level",
-            "experience", 
-            "strength_gains", 
-            "magic_gains", 
-            "skill_gains", 
-            "speed_gains", 
-            "luck_gains", 
-            "defense_gains", 
-            "resistance_gains" 
+            "unitId",
+            "class"
         ];
         $uniqueFields = [];
         $dataIsValid = isValidFormData($nonNullableFields, $uniqueFields, $userUnitDataArray, $this->model);
@@ -146,13 +138,39 @@ class UserUnitController{
         exit();
     }
 
-    //TODO: ADD CHECKS OR SOMETHING, THERE'S NOTHING HERE
-    public function addSkill($userUnitId, $skillId): int | null {
-        return $this->model->addSkill($userUnitId, $skillId);
+    //TODO: Add comment
+    public function addSkill($userUnitSkillDataArray): void {
+        $nonNullableFields = [
+            "userId", 
+            "userUnitId",
+            "skill"
+        ];
+        $uniqueFields = [];
+        $dataIsValid = isValidFormData($nonNullableFields, $uniqueFields, $userUnitSkillDataArray, $this->model);
+        
+        if($dataIsValid) {
+            /*
+            TODO: ADD FORMATTING CHECKS HERE
+            */
+            $newUserUnitSkillId = $this->model->addSkill($userUnitSkillDataArray["userUnitId"], $userUnitSkillDataArray["skill"]);
+
+            if($newUserUnitSkillId != null){
+                header("location:index.php?table=user&action=showUnit&userId=" . $userUnitSkillDataArray["userId"] . "&userUnitId=" . $userUnitSkillDataArray["userUnitId"]);
+                exit();
+            }else{
+                header("location:index.php?table=user&action=addUnitSkill&userId=" . $userUnitSkillDataArray["userId"] . "&userUnitId=" . $userUnitSkillDataArray["userUnitId"] . "&error=true");
+                exit();
+            }
+        }else{
+            header("location:index.php?table=user&action=addUnitSkill&userId=" . $userUnitSkillDataArray["userId"] . "&userUnitId=" . $userUnitSkillDataArray["userUnitId"] . "&error=true");
+            exit();
+        }
     }
 
-    //TODO: NOT FINISHED
-    public function removeSkill($userUnitId, $skillId): bool {
-        return $this->model->removeSkill($userUnitId, $skillId);
+    //TODO: Add comment
+    public function removeSkill(array $userUnitSkillDataArray): void {
+        $this->model->removeSkill($userUnitSkillDataArray["userUnitId"], $userUnitSkillDataArray["skillId"]);
+        header("location:index.php?table=user&action=showUnit&userId=" . $userUnitSkillDataArray["userId"] . "&userUnitId=" . $userUnitSkillDataArray["userUnitId"]);
+        exit();
     }
 }

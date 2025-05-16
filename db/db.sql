@@ -113,13 +113,16 @@ CREATE TABLE `user_unit` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) unsigned NOT NULL,
   `unit_id` bigint(20) unsigned NOT NULL,
+  `class_id` bigint(20) unsigned NOT NULL,
   `level` INT DEFAULT 1 NOT NULL,
   `experience` INT DEFAULT 0 NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_unit_user_id_foreign` (`user_id`) USING BTREE,
   KEY `user_unit_unit_id_foreign` (`unit_id`) USING BTREE,
+  KEY `user_unit_class_id_foreign` (`class_id`) USING BTREE,
   CONSTRAINT `user_unit_FK_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT `user_unit_FK_unit` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT `user_unit_FK_unit` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT `user_unit_FK_class` FOREIGN KEY (`class_id`) REFERENCES `class` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 'user_unit_stats' table definition
@@ -261,8 +264,8 @@ COMMIT;
 
 
 -- 'user_unit' table default entries
-INSERT INTO user_unit (user_id, unit_id) VALUES
-(1, 1), (1, 2), (1, 3), (2, 3);
+INSERT INTO user_unit (user_id, unit_id, class_id) VALUES
+(1, 1, 5), (1, 2, 11), (1, 3, 8), (2, 3, 8);
 
 COMMIT;
 
