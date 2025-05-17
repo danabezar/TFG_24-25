@@ -23,16 +23,12 @@ $classController = new ClassController();
 $unitController = new UnitController();
 $classes = $classController->list();
 $unitData = $unitController->read($_REQUEST["id"]);
-
-
 ?>
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h3 class="h3">Editing unit "<?= $unitData->name ?>" with ID <?= $unitData->id ?></h3>
     </div>
-    <?php echo "Putos errores";
-    var_dump($errors); ?>
     <div id="content">
         <div class="alert alert-danger" style="display: <?= $errorVisibility ?>;"> <?= $errorString ?> </div>
         <form id="insertion-form" action="index.php?table=unit&action=store&event=update" method="POST">

@@ -97,6 +97,7 @@ if (isset($_REQUEST["event"])) {
                                             // }
                                             ?>
                                             <!-- <a class="btn btn-danger <?= $habilitado ?>" href="<?= $rutaDeAccion ?>"><i class="fa fa-trash"></i> Borrar</a> -->
+                                            <a class="btn btn-primary" href="index.php?table=unit&action=editImages&id=<?= $filteredUnit->id ?>"><i class="fa fa-camera"></i> Portraits</a>
                                             <a class="btn btn-danger" href="index.php?table=unit&action=delete&id=<?= $filteredUnit->id ?>"><i class="fa fa-trash"></i> Delete</a>
                                         </td>
                                     </tr>

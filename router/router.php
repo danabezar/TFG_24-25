@@ -45,7 +45,9 @@ function router (){
             "delete" => "delete.php",
             "search" => "search.php",
             "addSkill" => "addSkill.php",
-            "deleteSkill" => "deleteSkill.php"
+            "deleteSkill" => "deleteSkill.php",
+            "editImages" => "editImages.php",
+            "storeImages" => "storeImages.php"
         ],
         "skill" => [
             "create" => "create.php",
@@ -54,7 +56,9 @@ function router (){
             "list" => "list.php",
             "update" => "update.php",
             "delete" => "delete.php",
-            "search" => "search.php"
+            "search" => "search.php",
+            "editImages" => "editImages.php",
+            "storeImages" => "storeImages.php"
         ],
         "unit" => [
             "create" => "create.php",
@@ -63,7 +67,9 @@ function router (){
             "list" => "list.php",
             "update" => "update.php",
             "delete" => "delete.php",
-            "search" => "search.php"
+            "search" => "search.php",
+            "editImages" => "editImages.php",
+            "storeImages" => "storeImages.php"
         ]
     ];
 
