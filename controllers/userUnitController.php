@@ -93,7 +93,8 @@ class UserUnitController{
             "userId", 
             "userUnitId", 
             "level",
-            "experience", 
+            "experience",
+            "health_gains", 
             "strength_gains", 
             "magic_gains", 
             "skill_gains", 
@@ -106,17 +107,36 @@ class UserUnitController{
         $dataIsValid = isValidFormData($nonNullableFields, $uniqueFields, $userUnitDataArray, $this->model);
         
         if($dataIsValid) {
-            /*
-            TODO: ADD FORMATTING CHECKS HERE
-            */
-            $successfulUserUnitUpdate = $this->model->update($userUnitDataArray["userUnitId"], $userUnitDataArray);
+            //Format checks
+            $dataFormatIsValid = true;
+            $gainsCheckList = [
+                "health_gains", 
+                "strength_gains", 
+                "magic_gains", 
+                "skill_gains", 
+                "speed_gains", 
+                "luck_gains", 
+                "defense_gains", 
+                "resistance_gains"
+            ];
 
-            if($successfulUserUnitUpdate){
-                $successfulGainsUpdate = $this->model->updateStatGains($userUnitDataArray["userUnitId"], $userUnitDataArray);
+            $dataFormatIsValid = 
+            isValidFormDataFormat("level", ["level"], $userUnitDataArray) && 
+            isValidFormDataFormat("stat", $gainsCheckList, $userUnitDataArray);
+            
+            if($dataFormatIsValid) {
+                $successfulUserUnitUpdate = $this->model->update($userUnitDataArray["userUnitId"], $userUnitDataArray);
 
-                if($successfulGainsUpdate){
-                    header("location:index.php?table=user&action=showUnit&userId=" . $userUnitDataArray["userId"] .  "&userUnitId=" . $userUnitDataArray["userUnitId"]);
-                    exit();
+                if($successfulUserUnitUpdate){
+                    $successfulGainsUpdate = $this->model->updateStatGains($userUnitDataArray["userUnitId"], $userUnitDataArray);
+
+                    if($successfulGainsUpdate){
+                        header("location:index.php?table=user&action=showUnit&userId=" . $userUnitDataArray["userId"] .  "&userUnitId=" . $userUnitDataArray["userUnitId"]);
+                        exit();
+                    }else{
+                        header("location:index.php?table=user&action=updateUnit&userId=" . $userUnitDataArray["userId"] .  "&userUnitId=" . $userUnitDataArray["userUnitId"] . "&error=true");
+                        exit();
+                    }
                 }else{
                     header("location:index.php?table=user&action=updateUnit&userId=" . $userUnitDataArray["userId"] .  "&userUnitId=" . $userUnitDataArray["userUnitId"] . "&error=true");
                     exit();

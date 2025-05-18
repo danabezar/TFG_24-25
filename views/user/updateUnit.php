@@ -52,7 +52,7 @@ $classes = $classController->list();
                             if($_SESSION["formData"]["class"] == $class->id){
                                 $isSelected = "selected";
                             }
-                        }else if($userUnit->classId == $class->id){
+                        }else if($userUnit->class_id == $class->id){
                             $isSelected = "selected";
                         }
                         echo "<option value=" . $class->id . " " . $isSelected .">" . $class->name . "</option>";

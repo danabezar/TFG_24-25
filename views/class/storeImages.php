@@ -1,7 +1,11 @@
 <?php
 require_once "controllers/classController.php";
 
-$classId = $_REQUEST["id"];
+if(isset($_REQUEST["id"]) && filter_var($_REQUEST["id"], FILTER_VALIDATE_INT)){
+    $classId = $_REQUEST["id"];
+}else{
+    header("location:index.php?table=class&action=list");
+}
 
 $controller = new ClassController();
 $classData = $controller->read($classId);

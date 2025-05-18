@@ -20,11 +20,11 @@ class UnitController{
             "health_base", 
             "strength_base", 
             "magic_base", 
-            "skill_base", 
+            "skill_base",
+            "speed_base", 
             "luck_base", 
             "defense_base", 
             "resistance_base", 
-            "magic_base", 
             "health_growth", 
             "strength_growth", 
             "magic_growth", 
@@ -38,20 +38,50 @@ class UnitController{
         $dataIsValid = isValidFormData($nonNullableFields, $uniqueFields, $unitDataArray, $this->model);
         
         if($dataIsValid) {
-            /*
-            TODO: ADD FORMATTING CHECKS HERE
-            */
-            $newUnitId = $this->model->insert($unitDataArray);
+             //Format checks
+            $dataFormatIsValid = true;
+            $baseCheckList = [
+                "health_base", 
+                "strength_base", 
+                "magic_base", 
+                "skill_base",
+                "speed_base", 
+                "luck_base", 
+                "defense_base", 
+                "resistance_base"
+            ];
+            $growthCheckList = [
+                "health_growth", 
+                "strength_growth", 
+                "magic_growth", 
+                "skill_growth", 
+                "speed_growth", 
+                "luck_growth", 
+                "defense_growth", 
+                "resistance_growth" 
+            ];
 
-            if($newUnitId != null){
-                $newUnitBasesId = $this->model->addBases($newUnitId, $unitDataArray);
+            $dataFormatIsValid = 
+            isValidFormDataFormat("level", ["level_base"], $unitDataArray) && 
+            isValidFormDataFormat("base", $baseCheckList, $unitDataArray) && 
+            isValidFormDataFormat("growth", $growthCheckList, $unitDataArray);
 
-                if($newUnitBasesId != null){
-                    $newUnitGrowthsId = $this->model->addGrowths($newUnitId, $unitDataArray);
+            if($dataFormatIsValid) {
+                $newUnitId = $this->model->insert($unitDataArray);
 
-                    if($newUnitGrowthsId != null){
-                        header("location:index.php?table=unit&action=show&id=" . $newUnitId);
-                        exit();
+                if($newUnitId != null){
+                    $newUnitBasesId = $this->model->addBases($newUnitId, $unitDataArray);
+
+                    if($newUnitBasesId != null){
+                        $newUnitGrowthsId = $this->model->addGrowths($newUnitId, $unitDataArray);
+
+                        if($newUnitGrowthsId != null){
+                            header("location:index.php?table=unit&action=show&id=" . $newUnitId);
+                            exit();
+                        }else{
+                            header("location:index.php?table=unit&action=create&error=true");
+                            exit();
+                        }
                     }else{
                         header("location:index.php?table=unit&action=create&error=true");
                         exit();
@@ -60,7 +90,7 @@ class UnitController{
                     header("location:index.php?table=unit&action=create&error=true");
                     exit();
                 }
-            }else{
+            }else {
                 header("location:index.php?table=unit&action=create&error=true");
                 exit();
             }
@@ -117,20 +147,50 @@ class UnitController{
         $dataIsValid = isValidFormData($nonNullableFields, $uniqueFields, $unitDataArray, $this->model);
         
         if($dataIsValid) {
-            /*
-            TODO: ADD FORMATTING CHECKS HERE
-            */
-            $successfulUnitUpdate = $this->model->update($unitDataArray["id"], $unitDataArray);
+           //Format checks
+            $dataFormatIsValid = true;
+            $baseCheckList = [
+                "health_base", 
+                "strength_base", 
+                "magic_base", 
+                "skill_base",
+                "speed_base", 
+                "luck_base", 
+                "defense_base", 
+                "resistance_base"
+            ];
+            $growthCheckList = [
+                "health_growth", 
+                "strength_growth", 
+                "magic_growth", 
+                "skill_growth", 
+                "speed_growth", 
+                "luck_growth", 
+                "defense_growth", 
+                "resistance_growth" 
+            ];
 
-            if($successfulUnitUpdate){
-                $successfulUnitBasesUpdate = $this->model->updateBases($unitDataArray["id"], $unitDataArray);
+            $dataFormatIsValid = 
+            isValidFormDataFormat("level", ["level_base"], $unitDataArray) && 
+            isValidFormDataFormat("base", $baseCheckList, $unitDataArray) && 
+            isValidFormDataFormat("growth", $growthCheckList, $unitDataArray);
+            
+            if($dataFormatIsValid) {
+                $successfulUnitUpdate = $this->model->update($unitDataArray["id"], $unitDataArray);
 
-                if($successfulUnitBasesUpdate){
-                    $successfulUnitGrowthsUpdate = $this->model->updateGrowths($unitDataArray["id"], $unitDataArray);
+                if($successfulUnitUpdate){
+                    $successfulUnitBasesUpdate = $this->model->updateBases($unitDataArray["id"], $unitDataArray);
 
-                    if($successfulUnitGrowthsUpdate){
-                        header("location:index.php?table=unit&action=show&id=" . $unitDataArray["id"]);
-                        exit();
+                    if($successfulUnitBasesUpdate){
+                        $successfulUnitGrowthsUpdate = $this->model->updateGrowths($unitDataArray["id"], $unitDataArray);
+
+                        if($successfulUnitGrowthsUpdate){
+                            header("location:index.php?table=unit&action=show&id=" . $unitDataArray["id"]);
+                            exit();
+                        }else{
+                            header("location:index.php?table=unit&action=update&id=" . $unitDataArray["id"] . "&error=true");
+                            exit();
+                        }
                     }else{
                         header("location:index.php?table=unit&action=update&id=" . $unitDataArray["id"] . "&error=true");
                         exit();
@@ -141,7 +201,7 @@ class UnitController{
                 }
             }else{
                 header("location:index.php?table=unit&action=update&id=" . $unitDataArray["id"] . "&error=true");
-                exit();
+                exit(); 
             }
         }else{
             header("location:index.php?table=unit&action=update&id=" . $unitDataArray["id"] . "&error=true");

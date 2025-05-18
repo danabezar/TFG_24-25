@@ -29,22 +29,38 @@ class ClassController{
         $dataIsValid = isValidFormData($nonNullableFields, $uniqueFields, $classDataArray, $this->model);
         
         if($dataIsValid) {
-            /*
-            TODO: ADD FORMATTING CHECKS HERE
-            */
-            $newClassId = $this->model->insert($classDataArray);
+            //Format checks
+            $dataFormatIsValid = true;
+            $growthCheckList = [
+                "health_growth", 
+                "strength_growth", 
+                "magic_growth", 
+                "skill_growth", 
+                "speed_growth", 
+                "luck_growth", 
+                "defense_growth", 
+                "resistance_growth" 
+            ];
 
-            if($newClassId != null){
-                $newClassGrowthsId = $this->model->addGrowths($newClassId, $classDataArray);
+            $dataFormatIsValid = isValidFormDataFormat("growth", $growthCheckList, $classDataArray);
+            if($dataFormatIsValid) {
+                $newClassId = $this->model->insert($classDataArray);
 
-                if($newClassGrowthsId != null){
-                    header("location:index.php?table=class&action=show&id=" . $newClassId);
-                    exit();
+                if($newClassId != null){
+                    $newClassGrowthsId = $this->model->addGrowths($newClassId, $classDataArray);
+
+                    if($newClassGrowthsId != null){
+                        header("location:index.php?table=class&action=show&id=" . $newClassId);
+                        exit();
+                    }else{
+                        header("location:index.php?table=class&action=create&error=true");
+                        exit();
+                    }
                 }else{
                     header("location:index.php?table=class&action=create&error=true");
                     exit();
                 }
-            }else{
+            }else {
                 header("location:index.php?table=class&action=create&error=true");
                 exit();
             }
@@ -123,22 +139,38 @@ class ClassController{
         $dataIsValid = isValidFormData($nonNullableFields, $uniqueFields, $classDataArray, $this->model);
         
         if($dataIsValid) {
-            /*
-            TODO: ADD FORMATTING CHECKS HERE
-            */
-            $succesfulClassUpdate = $this->model->update($classId, $classDataArray);
+            //Format checks
+            $dataFormatIsValid = true;
+            $growthCheckList = [
+                "health_growth", 
+                "strength_growth", 
+                "magic_growth", 
+                "skill_growth", 
+                "speed_growth", 
+                "luck_growth", 
+                "defense_growth", 
+                "resistance_growth" 
+            ];
 
-            if($succesfulClassUpdate){
-                $successfullGrowthsUpdate = $this->model->updateGrowths($classId, $classDataArray);
+            $dataFormatIsValid = isValidFormDataFormat("growth", $growthCheckList, $classDataArray);
+            if($dataFormatIsValid) {
+                $succesfulClassUpdate = $this->model->update($classId, $classDataArray);
 
-                if($successfullGrowthsUpdate){
-                    header("location:index.php?table=class&action=show&id=" . $classId);
-                    exit();
+                if($succesfulClassUpdate){
+                    $successfullGrowthsUpdate = $this->model->updateGrowths($classId, $classDataArray);
+
+                    if($successfullGrowthsUpdate){
+                        header("location:index.php?table=class&action=show&id=" . $classId);
+                        exit();
+                    }else{
+                        header("location:index.php?table=class&action=update&id={$classId}&error=true");
+                        exit();
+                    }
                 }else{
                     header("location:index.php?table=class&action=update&id={$classId}&error=true");
                     exit();
                 }
-            }else{
+            }else {
                 header("location:index.php?table=class&action=update&id={$classId}&error=true");
                 exit();
             }
@@ -212,9 +244,6 @@ class ClassController{
         $dataIsValid = isValidFormData($nonNullableFields, $uniqueFields, $classDataArray, $this->model);
         
         if($dataIsValid) {
-            /*
-            TODO: ADD FORMATTING CHECKS HERE
-            */
             $this->model->addSkill(
                 $classDataArray["id"], 
                 $classDataArray["selectedSkill"], 

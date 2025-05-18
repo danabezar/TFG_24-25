@@ -1,4 +1,5 @@
 <?php 
+//TODO: ADD COMMENT
 function isValidUsername(string $username): bool{
     $filter = "/^[a-zA-Z\d]+$/";
     if (preg_match($filter, $username)) {
@@ -7,17 +8,36 @@ function isValidUsername(string $username): bool{
     return false;
 }
 
-function isValidNumericValue(string $number): bool {
-    if(filter_var($number, FILTER_VALIDATE_INT) && intval($number) > 0){
+//TODO: ADD COMMENT
+function isValidEmail(string $email){
+    return (false !== filter_var($email, FILTER_VALIDATE_EMAIL));
+}
+
+//TODO: ADD COMMENT
+function isValidBaseOrStatValue(string $stat): bool {
+    if(filter_var($stat, FILTER_VALIDATE_INT) !== false && (intval($stat) >= 0) && (intval($stat) <= 40)){
         return true;
     }
     return false;
 }
 
-function isValidEmail(string $email){
-    return (false !== filter_var($email, FILTER_VALIDATE_EMAIL));
+//TODO: ADD COMMENT
+function isValidGrowthValue(string $growth): bool {
+    if(filter_var($growth, FILTER_VALIDATE_INT) !== false && (intval($growth) >= 0) && (intval($growth) <= 100)){
+        return true;
+    }
+    return false;
 }
 
+//TODO: ADD COMMENT
+function isValidLevelValue(string $level): bool {
+    if(filter_var($level, FILTER_VALIDATE_INT) !== false && (intval($level) >= 1) && (intval($level) <= 20)){
+        return true;
+    }
+    return false;
+}
+
+//TODO: ADD COMMENT
 function areThereNullFields(array $fieldsToCheck, array $dataArray): array{
     $foundNulls = [];
 
@@ -31,10 +51,12 @@ function areThereNullFields(array $fieldsToCheck, array $dataArray): array{
     return $foundNulls;
 }
 
+//TODO: ADD COMMENT
 function valueExists(array $dataArray, string $field, mixed $value): bool{
     return in_array($dataArray[$field], $value);
 }
 
+//TODO: ADD COMMENT
 function showErrors($errorArray, $field){
     $errorString = "";
 
@@ -50,6 +72,7 @@ function showErrors($errorArray, $field){
     return $errorString;
 }
 
+//TODO: ADD COMMENT
 function isValidFormData(array $nonNullableFields, array $uniqueFields, array $formDataArray, BaseModel $model): bool{
     $error = false;
     $errors = [];
@@ -82,7 +105,7 @@ function isValidFormData(array $nonNullableFields, array $uniqueFields, array $f
         }
     }
 
-    //Final check. If no errors were found, the insertion is made
+    //Final check. If no errors were found, a true will be returned
     if (!$error) {
         return true;
     } else {
@@ -90,5 +113,47 @@ function isValidFormData(array $nonNullableFields, array $uniqueFields, array $f
         $_SESSION["formData"] = $formDataArray;
         return false;
     }
+}
+
+//TODO: ADD COMMENT
+function isValidFormDataFormat(string $formatFilterType, array $toCheckFields, array $formDataArray): bool {
+    $foundFormatErrors = [];
+
+    foreach($toCheckFields as $currentField){
+        switch ($formatFilterType){
+            case "base":
+            case "stat":
+                if(!isValidBaseOrStatValue($formDataArray[$currentField])){
+                    $foundFormatErrors[$currentField][] = "The " . $currentField . " field's format isn't valid, try again";
+                }
+                break;
+            case "growth":
+                if(!isValidGrowthValue($formDataArray[$currentField])){
+                    $foundFormatErrors[$currentField][] = "The " . $currentField . " field's format isn't valid, try again";
+                }
+                break;
+            case "level":
+                if(!isValidLevelValue($formDataArray[$currentField])){
+                    $foundFormatErrors[$currentField][] = "The " . $currentField . " field's format isn't valid, try again";
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    if(!empty($foundFormatErrors)){
+        $errors = $_SESSION["errors"] ?? [];
+
+        foreach($foundFormatErrors as $index => $values){
+            $errors[$index][] = $values[0];
+        }
+
+        $_SESSION["errors"] = $errors;
+        $_SESSION["formData"] = $formDataArray;
+        return false;
+    }
+    
+    return true;
 }
 ?>

@@ -1,5 +1,8 @@
-PENDIENTE
-- Añadir comentarios en todos los métodos
-- Añadir checks de formato en los CRUDs
-- Añadir check de borrado en los múltiples listados (esBorrable)
-- En userunit se ha roto el selector precargado con la clase de la Unit, ver el por qué (el cambio en BD seguro)
+PENDING
+- Add comments to every method
+- Base INT values check in Class, Skill, Unit and UserUnit 
+
+OPTIONAL
+- Turn image uploading process into a method
+- Add double-checking format with JavaScript
+- Add check in case a DB entry cannot be deleted due to Foreign Key restrictions (esBorrable)

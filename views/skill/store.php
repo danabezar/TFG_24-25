@@ -2,15 +2,19 @@
 require_once "controllers/skillController.php";
 
 //ID retrieval in case an update is issued
-$id = ($_REQUEST["id"]) ?? "";
+if(isset($_REQUEST["id"]) && filter_var($_REQUEST["id"], FILTER_VALIDATE_INT)){
+    $id = $_REQUEST["id"];
+}else{
+    $id = "";
+}
 
 $skillArrayData = [
     "id" => $id, 
-    "name" => $_REQUEST["name"],
-    "previousName" => $_REQUEST["previousName"] ?? "",
-    "type" => $_REQUEST["type"],
-    "attribute" => $_REQUEST["attribute"],
-    "value" => $_REQUEST["value"]
+    "name" => htmlspecialchars($_REQUEST["name"]),
+    "previousName" => isset($_REQUEST["previousName"]) ? htmlspecialchars($_REQUEST["previousName"]) : "",
+    "type" => htmlspecialchars($_REQUEST["type"]),
+    "attribute" => htmlspecialchars($_REQUEST["attribute"]),
+    "value" => $_REQUEST["value"] 
 ];
 
 $controller = new SkillController();

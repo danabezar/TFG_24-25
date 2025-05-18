@@ -1,7 +1,11 @@
 <?php
 require_once "controllers/skillController.php";
 
-$skillId = $_REQUEST["id"];
+if(isset($_REQUEST["id"]) && filter_var($_REQUEST["id"], FILTER_VALIDATE_INT)){
+    $skillId = $_REQUEST["id"];
+}else{
+    header("location:index.php?table=skill&action=list");
+}
 
 $controller = new SkillController();
 $skillData = $controller->read($skillId);

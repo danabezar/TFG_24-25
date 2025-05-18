@@ -2,12 +2,16 @@
 require_once "controllers/unitController.php";
 
 //ID retrieval in case an update is issued
-$id = ($_REQUEST["id"]) ?? "";
+if(isset($_REQUEST["id"]) && filter_var($_REQUEST["id"], FILTER_VALIDATE_INT)){
+    $id = $_REQUEST["id"];
+}else{
+    $id = "";
+}
 
 $classArrayData = [
     "id" => $id, 
-    "name" => $_REQUEST["name"], 
-    "previousName" => $_REQUEST["previousName"] ?? "", 
+    "name" => htmlspecialchars($_REQUEST["name"]), 
+    "previousName" => isset($_REQUEST["previousName"]) ? htmlspecialchars($_REQUEST["previousName"]) : "", 
     "class" => $_REQUEST["class"], 
     "level_base" => $_REQUEST["level_base"], 
     "health_base" => $_REQUEST["health_base"], 

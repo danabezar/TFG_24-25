@@ -20,14 +20,6 @@ class UserController{
         $_SESSION["errors"] = [];
         $_SESSION["formData"] = [];
 
-        // /*****************************************************/
-        // // Field format checks
-        // // if (!nombreUsuarioValido($arrayUser["nick"])) {
-        // //     $error = true;
-        // //     $errores["usuario"][] = "El usuario tiene un formato incorrecto";
-        // // }
-        // /*****************************************************/
-
         //Empty field checks
         $nonNullableFields = ["username", "password"];
         $foundNullFields = areThereNullFields($nonNullableFields, $userDataArray);
@@ -49,7 +41,6 @@ class UserController{
             }
         }
 
-
         //Final check. If no errors were found, the insertion is made
         if (!$error) {
             $id = $this->model->insert($userDataArray);
@@ -63,26 +54,6 @@ class UserController{
             header("location:index.php?table=user&action=create&error=true");
             exit();
         } else {
-        //     /*****************************************************/
-        //     //TODO: Change this so the units are added. Adapt the already existing previous code
-        //     // //Se obtienen todos los digimon iniciales
-        //     // $digimonIniciales = $this->digimonController->buscar("level", "equals", "1");
-        //     // $digimonParaUsuario = [];
-
-        //     // //Buscamos aleatoriamente 3 digimon aleatorios distintos
-        //     // while(count($digimonParaUsuario) < 3){
-        //     //     $seleccionAleatoria = rand(0, (count($digimonIniciales)-1));
-        //     //      if(!in_array($digimonIniciales[$seleccionAleatoria]->id, $digimonParaUsuario)){
-        //     //          $digimonParaUsuario[]=$digimonIniciales[ $seleccionAleatoria]->id;
-        //     //     }
-        //     // }
-
-        //     // //Tras encontrar los 3 digimon distintos, se asignan al usuario recién creado
-        //     // foreach ($digimonParaUsuario as $idDigimonInicial) {
-        //     //     $this->userDigimonController->crear($id, $idDigimonInicial);
-        //     // }
-        //     /*****************************************************/
-
             unset($_SESSION["errors"]);
             unset($_SESSION["formData"]);
             header("location:index.php?table=user&action=show&id=".$id);

@@ -2,8 +2,8 @@
 require_once "controllers/userController.php";
 
 $userArrayData = [    
-    "username" => $_REQUEST["username"],
-    "password" => $_REQUEST["password"]
+    "username" => htmlspecialchars($_REQUEST["username"]),
+    "password" => htmlspecialchars($_REQUEST["password"])
 ];
 
 $controller = new UserController();
