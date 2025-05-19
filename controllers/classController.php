@@ -9,9 +9,11 @@ class ClassController{
         $this->model = new ClassModel();
     }
 
-    /*
-     * TODO: ADD COMMENT
-    */
+    /**
+     * Inserts a new entry in the database's "class" table
+     * 
+     * @param array $classDataArray Contains the values for each field in the table
+     */
     public function create(array $classDataArray): void{
         $nonNullableFields = [
             "name", 
@@ -70,53 +72,80 @@ class ClassController{
         }
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Finds an entry in the database's "class" table and returns its info
+     * 
+     * @param int $id ID of the row whose information will be retrieved
+     * 
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
+     */
     public function read(int $id): stdClass | null {
         return $this->model->findById($id);
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Finds an entry in the database's "class_growths" table and returns its info
+     * 
+     * @param int $id ID of the row whose information will be retrieved
+     * 
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
+     */
     public function readGrowths(int $id): stdClass | null {
         return $this->model->findByIdGrowths($id);
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Finds one or more entries in the database's "class_skills" table and returns their info
+     * 
+     * @param int $id ID of the "class" whose entries will be retrieved
+     * 
+     * @return array|null Returns an array if one or more matching rows were found, null if there weren't
+     */
     public function readSkills(int $id): array | null {
         return $this->model->findByIdSkills($id);
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Finds an entry in the database's "class" table and returns its info, with extra details
+     * 
+     * @param int $id ID of the row whose information will be retrieved
+     * 
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
+     */
     public function readDetailed(int $id): stdClass | null {
         return $this->model->findByIdDetailed($id);
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * List every entry in the database's "class" table and returns their info
+     * 
+     * @param bool $canBeErased Used to add an extra field which indicates if the entry can or cannot be deleted due to foreign key restrictions
+     * 
+     * @return array|null Returns an array with all the rows from the table, null if there were none
+     */
     public function list(bool $canBeErased = false): array | null {
         $classes = $this->model->readAll();
         return $classes;
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * List every entry in the database's "class" table and returns their info, with extra details
+     * 
+     * @param bool $canBeErased Used to add an extra field which indicates if the entry can or cannot be deleted due to foreign key restrictions
+     * 
+     * @return array|null Returns an array with all the rows from the table, null if there were none
+     */
     public function listDetailed(bool $canBeErased = false): array | null {
         $classes = $this->model->readAllDetailed();
         return $classes;
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Updates the data from a particular row in the "class" table
+     * 
+     * @param int $classId ID of the row whose info will be changed
+     * @param array $classDataArray Array with the new values for the fields in the table
+     */
     public function update(int $classId, array $classDataArray): void{
         $nonNullableFields = [
             "name", 
@@ -180,18 +209,27 @@ class ClassController{
         }
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Deletes a row from the "class" table
+     * 
+     * @param int $classId ID of the row which will be deleted
+     */
     public function delete(int $classId): void{
         $this->model->delete($classId);
         header("location:index.php?table=class&action=list");
         exit();
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Returns a list of rows from the "class" table where certain conditions are met
+     * 
+     * @param string $field Name of the field to apply a condition
+     * @param string $searchType Type of condition to apply to the specified field
+     * @param string $searchString String required to apply the condition
+     * @param bool $canBeErased Used to add an extra field which indicates if the entry can or cannot be deleted due to foreign key restrictions
+     * 
+     * @return array|null $classes Returns a list of rows who match the condition, or null if none did
+     */
     public function search(
         string $field = "name", 
         string $searchType = "contains", 
@@ -202,39 +240,58 @@ class ClassController{
             return $classes;
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Checks if a value from a certain field is already registered in the table
+     * 
+     * @param string $field Name of the field to check
+     * @param string $fieldValue Value of the field to check
+     * 
+     * @return bool Indicates whether the value is already registered or not
+     */
     public function exists(string $field, string $fieldValue): bool {
         return $this->model->exists($field, $fieldValue);
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Adds a new entry in the "class_growths" table for an already existing "class" row
+     * 
+     * @param int $classId ID of the row from the "class" table
+     * @param array $class Array with the required data for the new entry
+     * 
+     * @return int|null If the insertion could be made, an int is returned. Else, a null is
+     */
     public function addGrowths(int $classId, array $class): int | null {
         return $this->model->addGrowths($classId, $class);
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Updates an existing entry in the "class_growths" table
+     * 
+     * @param int $classId ID of the row from the "class" table
+     * @param array $class Array with the required data to update the entry
+     * 
+     * @return bool Indicates if the update was successful or not
+     */
     public function updateGrowths(int $classId, array $class): bool {
         return $this->model->updateGrowths($classId, $class);
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Removes an existing row from the "class_growths" table
+     * 
+     * @param int $classId ID of the row from the "class" table
+     */
     public function removeGrowths(int $classId): void {
         $this->model->removeGrowths($classId);
         header("location:index.php?table=class&action=show&id=" . $classId);
         exit();
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Adds a new entry in the "class_skill" table
+     * 
+     * @param array $classArrayData Array with the required data for the new entry
+     */
     public function addSkill(array $classDataArray): void {
         $nonNullableFields = [
             "selectedSkill", 
@@ -258,9 +315,12 @@ class ClassController{
         }
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Removes an existing row from the "class_skill" table
+     * 
+     * @param int $classId ID of the row from the "class" table
+     * @param int $skillId ID of the row from the "skill" table
+     */
     public function removeSkill(int $classId, int $skillId): void {
         $this->model->removeSkill($classId, $skillId);
         header("location:index.php?table=class&action=show&id=" . $classId);

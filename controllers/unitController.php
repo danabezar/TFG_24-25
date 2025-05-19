@@ -9,9 +9,11 @@ class UnitController{
         $this->model = new UnitModel();
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Inserts a new entry in the database's "unit" table
+     * 
+     * @param array $unitDataArray Contains the values for each field in the table
+     */
     public function create(array $unitDataArray): void{
         $nonNullableFields = [
             "name", 
@@ -100,23 +102,34 @@ class UnitController{
         }
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Finds an entry in the database's "unit" table and returns its info, with extra details
+     * 
+     * @param int $id ID of the row whose information will be retrieved
+     * 
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
+     */
     public function read(int $id): stdClass | null {
         return $this->model->findByIdDetailed($id);
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * List every entry in the database's "unit" table and returns their info, with extra details
+     * 
+     * @param bool $canBeErased Used to add an extra field which indicates if the entry can or cannot be deleted due to foreign key restrictions
+     * 
+     * @return array|null Returns an array with all the rows from the table, null if there were none
+     */
     public function list(bool $canBeErased = false): array | null {
         $units = $this->model->readAllDetailed();
         return $units;
     }
 
-
-    //TODO: Hacer esto
+    /**
+     * Updates the data from a particular row in the "unit" table
+     * 
+     * @param array $unitDataArray Array with the new values for the fields in the table
+     */
     public function update(array $unitDataArray): void{
         $nonNullableFields = [
             "name", 
@@ -209,15 +222,27 @@ class UnitController{
         }
     }
 
+    /**
+     * Deletes a row from the "unit" table
+     * 
+     * @param int $unitId ID of the row which will be deleted
+     */
     public function delete(int $unitId){
         $this->model->delete($unitId);
         header("location:index.php?table=unit&action=list");
         exit();
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Returns a list of rows from the "unit" table where certain conditions are met
+     * 
+     * @param string $field Name of the field to apply a condition
+     * @param string $searchType Type of condition to apply to the specified field
+     * @param string $searchString String required to apply the condition
+     * @param bool $canBeErased Used to add an extra field which indicates if the entry can or cannot be deleted due to foreign key restrictions
+     * 
+     * @return array|null $units Returns a list of rows who match the condition, or null if none did
+     */
     public function search(
         string $field = "name", 
         string $searchType = "contains", 
@@ -227,6 +252,4 @@ class UnitController{
             $units = $this->model->search($field, $searchType, $searchString);
             return $units;
     }
-
-    
 }

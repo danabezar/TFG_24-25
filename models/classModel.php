@@ -9,8 +9,10 @@ class ClassModel implements BaseModel{
     }
 
     /**
-     * Returns an ID if the insertion was succesful, else a null is returned
-    */
+     * Inserts a new entry in the database's "class" table
+     * 
+     * @param array $class Contains the values for each field in the table
+     */
     public function insert(array $class): int | null {
         try {
             $sqlQuery = "INSERT INTO `class`(`name`, `type`)  VALUES (:name, :type);";
@@ -28,8 +30,12 @@ class ClassModel implements BaseModel{
     }
 
     /**
-     * Returns a stdClass object if a matching row was found, else a null is returned
-    */
+     * Finds an entry in the database's "class" table and returns its info
+     * 
+     * @param int $id ID of the row whose information will be retrieved
+     * 
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
+     */
     public function findById(int $id): stdClass | null {
         $sqlQuery = "SELECT * FROM `class` WHERE `id` = :id";
         $preparedQuery = $this->connection->prepare($sqlQuery);
@@ -47,7 +53,11 @@ class ClassModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
+     * Finds an entry in the database's "class_growths" table and returns its info
+     * 
+     * @param int $id ID of the row whose information will be retrieved
+     * 
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
      */
     public function findByIdGrowths(int $id): stdClass | null {
         $sqlQuery = "
@@ -73,7 +83,11 @@ class ClassModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
+     * Finds one or more entries in the database's "class_skills" table and returns their info
+     * 
+     * @param int $id ID of the "class" whose entries will be retrieved
+     * 
+     * @return array|null Returns an array if one or more matching rows were found, null if there weren't
      */
     public function findByIdSkills(int $id): array | null {
         $sqlQuery = "
@@ -100,8 +114,12 @@ class ClassModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
-    */
+     * Finds an entry in the database's "class" table and returns its info, with extra details
+     * 
+     * @param int $id ID of the row whose information will be retrieved
+     * 
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
+     */
     public function findByIdDetailed(int $id): stdClass | null {
         $sqlQuery = "
             SELECT c.`id`, c.`name`, c.`type`, 
@@ -129,8 +147,10 @@ class ClassModel implements BaseModel{
     }
 
     /**
-     * Returns an array with all the rows in the table or null if none where found
-    */
+     * List every entry in the database's "class" table and returns their info
+     * 
+     * @return array|null Returns an array with all the rows from the table, null if there were none
+     */
     public function readAll(): array | null{
         $sqlQuery = "
             SELECT * FROM `class` 
@@ -148,8 +168,10 @@ class ClassModel implements BaseModel{
     }
 
     /**
-     * Returns an array with all the rows in the table with additional info, or null if none where found
-    */
+     * List every entry in the database's "class" table and returns their info, with extra details
+     * 
+     * @return array|null Returns an array with all the rows from the table, null if there were none
+     */
     public function readAllDetailed(): array | null{
         $sqlQuery = "
             SELECT c.`id`, c.`name`, c.`type`, 
@@ -174,7 +196,10 @@ class ClassModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
+     * Updates the data from a particular row in the "class" table
+     * 
+     * @param int $id ID of the row whose info will be changed
+     * @param array $class Array with the new values for the fields in the table
      */
     public function update(int $id, array $class): bool {
         try {
@@ -198,7 +223,9 @@ class ClassModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
+     * Deletes a row from the "class" table
+     * 
+     * @param int $id ID of the row which will be deleted
      */
     public function delete(int $id): bool {
         $sqlQuery = "DELETE FROM `class` WHERE `id` = :id";
@@ -217,9 +244,15 @@ class ClassModel implements BaseModel{
         }
     }
 
-    /*
-     * Returns a series of rows which match the conditions sent via parameters
-    */
+    /**
+     * Returns a list of rows from the "class" table where certain conditions are met
+     * 
+     * @param string $field Name of the field to apply a condition
+     * @param string $searchType Type of condition to apply to the specified field
+     * @param string $searchString String required to apply the condition
+     * 
+     * @return array|null $classes Returns a list of rows who match the condition, or null if none did
+     */
     public function search(string $field, string $searchType, string $searchString): array | null{
         switch ($searchType) {
             case "begins":
@@ -251,9 +284,14 @@ class ClassModel implements BaseModel{
         }
     }
 
-    /*
-     * Checks if any row in the table exists with the specified value in a certain field
-    */
+    /**
+     * Checks if a value from a certain field is already registered in the table
+     * 
+     * @param string $field Name of the field to check
+     * @param string $fieldValue Value of the field to check
+     * 
+     * @return bool Indicates whether the value is already registered or not
+     */
     public function exists(string $field, string $fieldValue): bool{
         $sqlQuery = "SELECT * FROM `class` WHERE $field = :fieldValue";
         $preparedQuery = $this->connection->prepare($sqlQuery);
@@ -270,8 +308,13 @@ class ClassModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
-    */
+     * Adds a new entry in the "class_growths" table for an already existing "class" row
+     * 
+     * @param int $classId ID of the row from the "class" table
+     * @param array $class Array with the required data for the new entry
+     * 
+     * @return int|null If the insertion could be made, an int is returned. Else, a null is
+     */
     public function addGrowths(int $classId, array $class): int | null {
         try {
             $sqlQuery = "
@@ -300,8 +343,13 @@ class ClassModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
-    */
+     * Updates an existing entry in the "class_growths" table
+     * 
+     * @param int $classId ID of the row from the "class" table
+     * @param array $class Array with the required data to update the entry
+     * 
+     * @return bool Indicates if the update was successful or not
+     */
     public function updateGrowths(int $classId, array $class): bool {
         try {
             $sqlQuery = "
@@ -330,8 +378,10 @@ class ClassModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
-    */
+     * Removes an existing row from the "class_growths" table
+     * 
+     * @param int $classId ID of the row from the "class" table
+     */
     public function removeGrowths(int $classId): bool {
         $sqlQuery = "DELETE FROM `class_growths` WHERE `class_id` = :classId";
 
@@ -350,7 +400,13 @@ class ClassModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
+     * Adds a new entry in the "class_skill" table
+     * 
+     * @param int $classId ID of the "class" who will be linked to the "skill"
+     * @param int $skillId ID of the "skill" who will be linked to the "class"
+     * @param int $requiredLevel Level required to reach to obtain the skill
+     * 
+     * @return int|null If the insertion is successful, an int will be returned. Else, a null
      */
     public function addSkill(int $classId, int $skillId, int $requiredLevel = 10): int | null {
         try {
@@ -373,7 +429,10 @@ class ClassModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
+     * Removes an existing row from the "class_skill" table
+     * 
+     * @param int $classId ID of the row from the "class" table
+     * @param int $skillId ID of the row from the "skill" table
      */
     public function removeSkill(int $classId, int $skillId): bool {
         $sqlQuery = "

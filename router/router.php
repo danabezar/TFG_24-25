@@ -19,7 +19,6 @@ function router (){
 
     $table = $_REQUEST["table"];
 
-    //TODO: Change all of this
     $tables = [
         "user" => [
             "create" => "create.php",

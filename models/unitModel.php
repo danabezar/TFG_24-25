@@ -9,8 +9,10 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * Returns an ID if the insertion was succesful, else a null is returned
-    */
+     * Inserts a new entry in the database's "unit" table
+     * 
+     * @param array $unit Contains the values for each field in the table
+     */
     public function insert(array $unit): int | null {
         try {
             $sqlQuery = "INSERT INTO `unit`(`name`, `class_id`)  VALUES (:name, :classId);";
@@ -28,8 +30,12 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * Returns a stdClass object if a matching row was found, else a null is returned
-    */
+     * Finds an entry in the database's "unit" table and returns its info
+     * 
+     * @param int $id ID of the row whose information will be retrieved
+     * 
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
+     */
     public function findById(int $id): stdClass | null {
         $sqlQuery = "SELECT * FROM `unit` WHERE `id` = :id";
         $preparedQuery = $this->connection->prepare($sqlQuery);
@@ -99,8 +105,12 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
-    */
+     * Finds an entry in the database's "unit" table and returns its info, with extra details
+     * 
+     * @param int $id ID of the row whose information will be retrieved
+     * 
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
+     */
     public function findByIdDetailed(int $id): stdClass | null {
         $sqlQuery = "
             SELECT u.`id`, u.`name`, c.`id` AS `classId`, c.`name` AS `class`, b.`level` AS `level_base`, 
@@ -136,8 +146,10 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * Returns an array with all the rows in the table or null if none where found
-    */
+     * List every entry in the database's "unit" table and returns their info
+     *      * 
+     * @return array|null Returns an array with all the rows from the table, null if there were none
+     */
     public function readAll(): array | null{
         $sqlQuery = "
             SELECT * FROM `unit` 
@@ -155,8 +167,10 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * Returns an array with all the rows in the table with additional info, or null if none where found
-    */
+     * List every entry in the database's "unit" table and returns their info, with extra details
+     * 
+     * @return array|null Returns an array with all the rows from the table, null if there were none
+     */
     public function readAllDetailed(): array | null{
         $sqlQuery = "
             SELECT u.`id`, u.`name`, c.`id` AS `classId`, c.`name` AS `class`, b.`level` AS `level_base`, 
@@ -189,7 +203,10 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
+     * Updates the data from a particular row in the "unit" table
+     * 
+     * @param int $id ID of the "unit" to be updated
+     * @param array $unit Array with the new values for the fields in the table
      */
     public function update(int $id, array $unit): bool {
         try {
@@ -213,7 +230,9 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
+     * Deletes a row from the "unit" table
+     * 
+     * @param int $id ID of the row which will be deleted
      */
     public function delete(int $id): bool {
         $sqlQuery = "DELETE FROM `unit` WHERE `id` = :id";
@@ -232,9 +251,15 @@ class UnitModel implements BaseModel{
         }
     }
 
-    /*
-     * Returns a series of rows which match the conditions sent via parameters
-    */
+    /**
+     * Returns a list of rows from the "unit" table where certain conditions are met
+     * 
+     * @param string $field Name of the field to apply a condition
+     * @param string $searchType Type of condition to apply to the specified field
+     * @param string $searchString String required to apply the condition
+     * 
+     * @return array|null $units Returns a list of rows who match the condition, or null if none did
+     */
     public function search(string $field, string $searchType, string $searchString): array | null{
         switch($field){
             case "name":
@@ -296,8 +321,8 @@ class UnitModel implements BaseModel{
         }
     }
 
-    /*
-     * Checks if any row in the table exists with the specified value in a certain field
+    /**
+     * TODO: Add comment
     */
     public function exists(string $field, string $fieldValue): bool{
         $sqlQuery = "SELECT * FROM unit WHERE $field = :fieldValue";
