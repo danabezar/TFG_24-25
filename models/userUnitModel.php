@@ -8,10 +8,11 @@ class UserUnitModel implements BaseModel{
         $this->connection = db::connection();
     }
 
-    //TODO: CHANGE ALL THE COMMENTS TO THE CORRECT FORMAT
     /**
-     * Returns an ID if a new UserUnit could be added, else null is returned
-    */
+     * Inserts a new entry in the database's "user_unit" table
+     * 
+     * @param array $userUnit Contains the values for each field in the table
+     */
     public function insert(array $userUnit): int | null {
         try {
             $sqlQuery = "
@@ -34,7 +35,13 @@ class UserUnitModel implements BaseModel{
         }
     }
 
-    //TODO: CHANGE COMMENT
+    /**
+     * Finds an entry in the database's "user_unit" table and returns its info
+     * 
+     * @param int $id ID of the row whose information will be retrieved
+     * 
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
+     */
     public function findById(int $id): stdClass | null {
         $sqlQuery = "SELECT * FROM `user_unit` WHERE `id` = :id";
         $preparedQuery = $this->connection->prepare($sqlQuery);
@@ -51,7 +58,13 @@ class UserUnitModel implements BaseModel{
         }
     }
 
-    //TODO: CHANGE COMMENT
+    /**
+     * Finds an entry in the database's "user_unit" table and returns its info, with extra details
+     * 
+     * @param int $id ID of the row whose information will be retrieved
+     * 
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
+     */
     public function findByIdDetailed(int $id): stdClass | null {
         $sqlQuery = "
         SELECT uu.`id`, u.`name`, uu.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
@@ -87,8 +100,13 @@ class UserUnitModel implements BaseModel{
     }
 
     /**
-     * Returns a UserUnit standard object if a matching row was found, else null is returned
-    */
+     * Finds an entry in the database's "user_unit" table with particular IDs from a "user" and a "unit"
+     * 
+     * @param int $userId ID from a "user"
+     * @param int $unitId ID from a "unit"
+     * 
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
+     */
     public function findByUserAndUnitId(int $userId, int $unitId): stdClass | null {
         $sqlQuery = "
             SELECT * FROM `user_unit` WHERE `user_id` = :userId 
@@ -109,7 +127,11 @@ class UserUnitModel implements BaseModel{
         }
     }
 
-    //TODO: Add comment
+    /**
+     * List every entry in the database's "user_unit" table and returns their info
+     * 
+     * @return array|null $userUnits Returns an array with all the rows from the table, null if there were none
+     */
     public function readAll(): array | null{
         $sqlQuery = "
             SELECT uu.`id`, u.`name`, uu.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
@@ -141,8 +163,12 @@ class UserUnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
-    */
+     * List every entry in the database's "user_unit" table which match the specified "user" ID, and returns their info
+     * 
+     * @param int $userId ID of the User to search for
+     * 
+     * @return array|null $userUnits Returns an array with all the rows from the table, null if there were none
+     */
     public function readAllByUserId(int $userId): array | null{
         $sqlQuery = "
             SELECT uu.`id`, u.`name`, uu.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
@@ -179,8 +205,12 @@ class UserUnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
-    */
+     * List every entry in the database's "user_unit" table which match the specified "unit" ID, and returns their info
+     * 
+     * @param int $unitId ID of the Unit to search for
+     * 
+     * @return array|null $userUnits Returns an array with all the rows from the table, null if there were none
+     */
     public function readAllByUnitId(int $unitId): array | null {
         $sqlQuery = "
             SELECT uu.`id`, u.`name`, uu.`class_id`, c.`name` AS `class`, uu.`level`, uu.`experience`, 
@@ -216,7 +246,13 @@ class UserUnitModel implements BaseModel{
         }
     }
 
-    //TODO: Add comment
+    /**
+     * Returns a list with all the entries in the "unit" table that aren't linked to a particular entry in the "user" table yet
+     * 
+     * @param int $userId ID of the row from the "user" table
+     * 
+     * @return array|null Returns an array with all the available rows, or null if there were none
+     */
     public function readAllAvailableForUser(int $userId): array | null {
         $sqlQuery = "
             SELECT * FROM `unit` WHERE `id` NOT IN 
@@ -236,7 +272,13 @@ class UserUnitModel implements BaseModel{
         }
     }
 
-    //TODO: Add comment
+    /**
+     * Returns a list with all the entries in the "skill" table that aren't linked to a particular entry in the "user_unit" table yet
+     * 
+     * @param int $userUnitId ID of the row from the "user_unit" table
+     * 
+     * @return array|null Returns an array with all the available rows, or null if there were none
+     */
     public function readAllSkillsAvailable(int $userUnitId): array | null {
         $sqlQuery = "
             SELECT * FROM `skill` WHERE `id` NOT IN 
@@ -257,7 +299,12 @@ class UserUnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
+     * Updates the data from a particular row in the "user_unit" table
+     * 
+     * @param array $userUnitId ID of the "user_unit" to update
+     * @param array $userUnit Array with the data needed for the update
+     * 
+     * @return bool Indicates whether the update was successful or not
      */
     public function update(int $userUnitId, array $userUnit): bool {
         try {
@@ -281,7 +328,11 @@ class UserUnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
+     * Deletes a row from the "user_unit" table
+     * 
+     * @param int $id ID of the row which will be deleted
+     * 
+     * @return bool Indicates whether the deletion was successful or not
      */
     public function delete(int $id): bool {
         $sqlQuery = "DELETE FROM `user_unit` WHERE `id` = :id";
@@ -300,9 +351,15 @@ class UserUnitModel implements BaseModel{
         }
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Returns a list of rows from the "user_unit" table where certain conditions are met
+     * 
+     * @param string $field Name of the field to apply a condition
+     * @param string $searchType Type of condition to apply to the specified field
+     * @param string $searchString String required to apply the condition
+     * 
+     * @return array|null $userUnits Returns a list of rows who match the condition, or null if none did
+     */
     public function search(string $field, string $searchType, string $searchString): array | null{
         switch($field){
             case "name":
@@ -351,22 +408,7 @@ class UserUnitModel implements BaseModel{
         }
     }
 
-    /*
-     * TODO: PENDING
-    */
     public function exists(string $field, string $fieldValue): bool{
-        // $sqlQuery = "SELECT * FROM unit WHERE $field = :fieldValue";
-        // $preparedQuery = $this->connection->prepare($sqlQuery);
-        // $dataArray = [
-        //     ":fieldValue" => $fieldValue
-        // ];
-
-        // $result = $preparedQuery->execute($dataArray);
-        // if(!$result || $preparedQuery->rowCount() <= 0) {
-        //     return false;
-        // } else {
-        //     return true;
-        // }
         return true;
     }
 
@@ -398,6 +440,13 @@ class UserUnitModel implements BaseModel{
 
     }
 
+    /**
+     * Returns a row from the "user_unit_stat_gains" table if they're linked to an entry in the "user_unit" table
+     * 
+     * @param int $userUnitId ID of the row from the "user_unit" table
+     * 
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
+     */
     public function getStatGainsById(int $userUnitId): stdClass | null {
         $sqlQuery = "
             SELECT * FROM `user_unit_stat_gains` 
@@ -461,6 +510,14 @@ class UserUnitModel implements BaseModel{
         }
     }
 
+    /**
+     * Adds a new entry in the "user_unit_skill" table
+     * 
+     * @param int $userUnitId ID of a "user_unit"
+     * @param int $skillId ID of a "skill"
+     * 
+     * @return int|null Returns an int if the insertion was successful, null if it wasn't
+     */
     public function addSkill($userUnitId, $skillId): int | null {
         try {
             $sqlQuery = "
@@ -480,6 +537,13 @@ class UserUnitModel implements BaseModel{
         }
     }
 
+    /**
+     * Returns a row from the "user_unit_skill" table if they're linked to an entry in the "user_unit" table
+     * 
+     * @param int $userUnitId ID of the row from the "user_unit" table
+     * 
+     * @return array|null Returns an array with all the available rows, or null if there were none
+     */
     public function getSkillsById(int $userUnitId): array | null {
         $sqlQuery = "
             SELECT uus.`id`, uus.`skill_id`, s.`name`, s.`type`, s.`attribute`, s.`value` 
@@ -501,6 +565,14 @@ class UserUnitModel implements BaseModel{
         }
     }
 
+    /**
+     * Removes an existing row from the "user_unit_skill" table
+     * 
+     * @param int $userUnitId ID of a "user_unit"
+     * @param int $skillId ID of a "skill"
+     * 
+     * @return bool Indicates whether the deletion was successful or not
+     */
     public function removeSkill($userUnitId, $skillId): bool {
         $sqlQuery = "
             DELETE FROM `user_unit_skill` 

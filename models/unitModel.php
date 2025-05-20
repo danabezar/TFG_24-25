@@ -53,7 +53,11 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
+     * Returns a row from the "unit_base_stats" linked to a particular "unit" ID
+     * 
+     * @param $id ID from the "unit"
+     * 
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
      */
     public function findByIdBases(int $id): stdClass | null {
         $sqlQuery = "
@@ -79,7 +83,11 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
+     * Returns a row from the "unit_growths" linked to a particular "unit" ID
+     * 
+     * @param $id ID from the "unit"
+     * 
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
      */
     public function findByIdGrowths(int $id): stdClass | null {
         $sqlQuery = "
@@ -322,8 +330,13 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
-    */
+     * Checks if a value from a certain field is already registered in the table
+     * 
+     * @param string $field Name of the field to check
+     * @param string $fieldValue Value of the field to check
+     * 
+     * @return bool Indicates whether the value is already registered or not
+     */
     public function exists(string $field, string $fieldValue): bool{
         $sqlQuery = "SELECT * FROM unit WHERE $field = :fieldValue";
         $preparedQuery = $this->connection->prepare($sqlQuery);
@@ -340,8 +353,13 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
-    */
+     * Adds a new entry in the "unit_base_stats" table for an already existing "unit"
+     * 
+     * @param $unitId ID of the "unit" who will be linked to the new entry
+     * @param $unit Array with the data required for the new entry
+     * 
+     * @return int|null If the insertion is successful, an int is returned. Else, a null is
+     */
     public function addBases(int $unitId, $unit): int | null {
         try {
             $sqlQuery = "
@@ -371,8 +389,13 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
-    */
+     * Updates an a row in the "unit_base_stats" table
+     * 
+     * @param $unitId ID of the "unit" whose bases will be updated
+     * @param $unit Array with the data required for the update of the row
+     * 
+     * @return bool Indicates whether the update was successful or not
+     */
     public function updateBases(int $unitId, $unit): bool {
         try {
             $sqlQuery = "
@@ -403,8 +426,12 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
-    */
+     * Deletes a row from the "unit_base_stats" table
+     * 
+     * @param $unitId ID of the "unit" linked to the entry
+     * 
+     * @return bool Indicates whether the deletion was successful or not
+     */
     public function deleteBases(int $unitId): bool {
         $sqlQuery = "DELETE FROM `unit_base_stats` WHERE `unit_id` = :unitId";
 
@@ -423,8 +450,13 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
-    */
+     * Adds a new entry in the "unit_growths" table for an already existing "unit"
+     * 
+     * @param $unitId ID of the "unit" who will be linked to the new entry
+     * @param $unit Array with the data required for the new entry
+     * 
+     * @return int|null If the insertion is successful, an int is returned. Else, a null is
+     */
     public function addGrowths(int $unitId, $unit): int | null {
         try {
             $sqlQuery = "
@@ -453,8 +485,13 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
-    */
+     * Updates an a row in the "unit_growths" table
+     * 
+     * @param $unitId ID of the "unit" whose bases will be updated
+     * @param $unit Array with the data required for the update of the row
+     * 
+     * @return bool Indicates whether the update was successful or not
+     */
     public function updateGrowths(int $unitId, $unit): bool {
         try {
             $sqlQuery = "
@@ -483,8 +520,12 @@ class UnitModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
-    */
+     * Deletes a row from the "unit_growths" table
+     * 
+     * @param $unitId ID of the "unit" linked to the entry
+     * 
+     * @return bool Indicates whether the deletion was successful or not
+     */
     public function deleteGrowths(int $unitId): bool {
         $sqlQuery = "DELETE FROM `unit_growths` WHERE `unit_id` = :unitId";
 

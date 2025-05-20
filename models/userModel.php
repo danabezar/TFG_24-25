@@ -9,8 +9,10 @@ class UserModel implements BaseModel{
     }
 
     /**
-     * Returns an int or a null depending if the operation could be succesfully made or not
-    */
+     * Inserts a new entry in the database's "user" table
+     * 
+     * @param array $user Contains the values for each field in the table
+     */
     public function insert(array $user): int | null {
         try {
             $sqlQuery = "INSERT INTO `user`(`username`, `password`)  VALUES (:username, :password);";
@@ -28,8 +30,12 @@ class UserModel implements BaseModel{
     }
 
     /**
-     * Returns a stdClass or a null depending if any row in the table was registered with the id
-    */
+     * Finds an entry in the database's "user" table and returns its info
+     * 
+     * @param int $id ID of the row whose information will be retrieved
+     * 
+     * @return stdClass|null Returns a "stdClass" type if a matching row was found, null if it wasn't
+     */
     public function findById(int $id): stdClass | null {
         $sqlQuery = "SELECT * FROM user WHERE id = :id";
         $preparedQuery = $this->connection->prepare($sqlQuery);
@@ -47,8 +53,10 @@ class UserModel implements BaseModel{
     }
 
     /**
-     * Returns an array with all the rows in the table or null if none where found
-    */
+     * List every entry in the database's "user" table and returns their info
+     * 
+     * @return array|null Returns an array with all the rows from the table, null if there were none
+     */
     public function readAll(): array | null{
         $sqlQuery = "SELECT * FROM user";
         $preparedQuery = $this->connection->prepare($sqlQuery);
@@ -63,7 +71,11 @@ class UserModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
+     * Updates the data from a particular row in the "user" table
+     * 
+     * @param array $user Array with the new values for the fields in the table
+     * 
+     * @return bool Indicates whether the update was successful or not
      */
     public function update(int $id, array $user): bool {
         try {
@@ -87,7 +99,9 @@ class UserModel implements BaseModel{
     }
 
     /**
-     * TODO: Add comment
+     * Deletes a row from the "user" table
+     * 
+     * @param int $id ID of the row which will be deleted
      */
     public function delete(int $id): bool {
         $sqlQuery = "DELETE FROM `user` WHERE `id` = :id";
@@ -106,9 +120,15 @@ class UserModel implements BaseModel{
         }
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Returns a list of rows from the "user" table where certain conditions are met
+     * 
+     * @param string $field Name of the field to apply a condition
+     * @param string $searchType Type of condition to apply to the specified field
+     * @param string $searchString String required to apply the condition
+     * 
+     * @return array|null $users Returns a list of rows who match the condition, or null if none did
+     */
     public function search(string $field, string $searchType, string $searchString): array | null{
         switch ($searchType) {
             case "begins":
@@ -140,9 +160,14 @@ class UserModel implements BaseModel{
         }
     }
 
-    /*
-     * TODO: Add comment
-    */
+    /**
+     * Checks if a value from a certain field is already registered in the table
+     * 
+     * @param string $field Name of the field to check
+     * @param string $fieldValue Value of the field to check
+     * 
+     * @return bool Indicates whether the value is already registered or not
+     */
     public function exists(string $field, string $fieldValue): bool{
         $sqlQuery = "SELECT * FROM user WHERE $field = :fieldValue";
         $preparedQuery = $this->connection->prepare($sqlQuery);

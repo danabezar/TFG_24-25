@@ -109,7 +109,7 @@ class UserUnitController{
      * 
      * @param int $userUnitId ID of the row from the "user_unit" table
      * 
-     * @return array|null Returns an array with all the available rows, or null if there were none
+     * @return stdClass|null Returns an "stdClass" type if a matching row was found, null if it wasn't
      */
     public function getStatGainsById(int $userUnitId): stdClass | null {
         return $this->model->getStatGainsById($userUnitId);
