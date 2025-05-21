@@ -6,9 +6,14 @@ if (!isset($_REQUEST['id'])) {
     exit();
 }
 
-$id = $_REQUEST['id'];
-$controller = new UnitController();
-$unit = $controller->read($id);
+$id = $_REQUEST["id"];
+$unitController = new UnitController();
+$unit = $unitController->read($id);
+
+if($unit == null){
+    header("location:index.php?table=unit&action=list");
+    exit();
+}
 ?>
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">

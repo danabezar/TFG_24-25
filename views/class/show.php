@@ -6,10 +6,16 @@ if (!isset($_REQUEST['id'])) {
     exit();
 }
 
-$id = $_REQUEST['id'];
-$controller = new ClassController();
-$class = $controller->readDetailed($id);
-$classSkills = $controller->readSkills($id);
+$id = $_REQUEST["id"];
+$classController = new ClassController();
+$class = $classController->readDetailed($id);
+
+if($class == null){
+    header("location:index.php?table=class&action=list");
+    exit();
+}
+
+$classSkills = $classController->readSkills($id);
 ?>
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">

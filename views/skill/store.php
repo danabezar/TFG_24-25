@@ -8,6 +8,16 @@ if(isset($_REQUEST["id"]) && filter_var($_REQUEST["id"], FILTER_VALIDATE_INT)){
     $id = "";
 }
 
+if($id != null && $id != ""){
+    $skillController = new SkillController();
+    $skill = $skillController->read($id);
+
+    if($skill == null){
+        header("location:index.php?table=skill&action=list");
+        exit();
+    }
+}
+
 $skillArrayData = [
     "id" => $id, 
     "name" => htmlspecialchars($_REQUEST["name"]),

@@ -6,7 +6,13 @@ if(!isset($_REQUEST["id"])){
     exit();
 }
 
-$userId = $_REQUEST["id"];
+$userId = $_REQUEST["userId"];
+$userController = new UserController();
+$user = $userController->read($userId);
 
-$controller = new UserController();
-$controller->delete($userId);
+if($user == null){
+    header("location:index.php?table=user&action=list");
+    exit();
+}
+
+$userController->delete($userId);

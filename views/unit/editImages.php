@@ -7,10 +7,15 @@ if (!isset($_REQUEST["id"])) {
 }
 
 $unitId = $_REQUEST["id"];
-$imgRoute = "assets\img\unit\\" . $unitId ;
+$unitController = new UnitController();
+$unitData = $unitController->read($unitId);
 
-$controller = new unitController();
-$unitData = $controller->read($unitId);
+if($unitData == null){
+    header("location:index.php?table=unit&action=list");
+    exit();
+}
+
+$imgRoute = "assets\img\unit\\" . $unitId ;
 
 $messageText = "";
 $messageVisibility = "hidden";

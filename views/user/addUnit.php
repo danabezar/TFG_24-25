@@ -9,6 +9,15 @@ if(!isset($_REQUEST["userId"])){
     exit();
 }
 
+$userId = $_REQUEST["userId"];
+$userController = new UserController();
+$user = $userController->read($userId);
+
+if($user == null){
+    header("location:index.php?table=user&action=list");
+    exit();
+}
+
 $errors = [];
 $previousFormData = [];
 $errorString = "Errors were found in the data introduced";
@@ -20,11 +29,9 @@ if (isset($_SESSION["errors"])) {
     $errorVisibility = "visible";
 }
 
-$userController = new UserController();
 $unitController = new UnitController();
-$userUnitController = new UserUnitController();
 
-$user = $userController->read($_REQUEST["userId"]);
+$userUnitController = new UserUnitController();
 $units = $userUnitController->listAvailableForUser($user->id);
 ?>
 

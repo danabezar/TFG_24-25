@@ -10,6 +10,19 @@ if(!isset($_REQUEST["userId"], $_REQUEST["userUnitId"])){
     exit();
 }
 
+$userId = $_REQUEST["userId"];
+$userController = new UserController();
+$user = $userController->read($userId);
+
+$userUnitId = $_REQUEST["userUnitId"];
+$userUnitController = new UserUnitController();
+$userUnit = $userUnitController->read($userUnitId);
+
+if($user == null || $userUnit == null){
+    header("location:index.php?table=user&action=list");
+    exit();
+}
+
 $errors = [];
 $previousFormData = [];
 $errorString = "Errors were found in the data introduced";
@@ -21,15 +34,11 @@ if (isset($_SESSION["errors"])) {
     $errorVisibility = "visible";
 }
 
-$userController = new UserController();
 $classController = new ClassController();
-$unitController = new UnitController();
-$userUnitController = new UserUnitController();
-
-$user = $userController->read($_REQUEST["userId"]);
-$userUnit = $userUnitController->read($_REQUEST["userUnitId"]);
-$statGains = $userUnitController->getStatGainsById($userUnit->id);
 $classes = $classController->list();
+
+$unitController = new UnitController();
+$statGains = $userUnitController->getStatGainsById($userUnit->id);
 ?>
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">

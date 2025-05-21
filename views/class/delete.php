@@ -7,6 +7,12 @@ if(!isset($_REQUEST["id"])){
 }
 
 $classId = $_REQUEST["id"];
+$classController = new ClassController();
+$class = $classController->read($classId);
 
-$controller = new ClassController();
-$controller->delete($classId);
+if($class == null){
+    header("location:index.php?table=class&action=list");
+    exit();
+}
+
+$classController->delete($classId);

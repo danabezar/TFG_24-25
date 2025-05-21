@@ -6,9 +6,14 @@ if (!isset($_REQUEST['id'])) {
     exit();
 }
 
-$id = $_REQUEST['id'];
-$controller = new SkillController();
-$skill = $controller->read($id);
+$id = $_REQUEST["id"];
+$skillController = new SkillController();
+$skill = $skillController->read($id);
+
+if($skill == null){
+    header("location:index.php?table=skill&action=list");
+    exit();
+}
 ?>
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">

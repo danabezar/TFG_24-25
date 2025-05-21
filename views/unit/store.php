@@ -8,6 +8,16 @@ if(isset($_REQUEST["id"]) && filter_var($_REQUEST["id"], FILTER_VALIDATE_INT)){
     $id = "";
 }
 
+if($id != null && $id != ""){
+    $unitController = new UnitController();
+    $unit = $unitController->read($id);
+
+    if($unit == null){
+        header("location:index.php?table=unit&action=list");
+        exit();
+    }
+}
+
 $classArrayData = [
     "id" => $id, 
     "name" => htmlspecialchars($_REQUEST["name"]), 

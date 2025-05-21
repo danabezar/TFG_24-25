@@ -7,8 +7,13 @@ if(isset($_REQUEST["id"]) && filter_var($_REQUEST["id"], FILTER_VALIDATE_INT)){
     header("location:index.php?table=skill&action=list");
 }
 
-$controller = new SkillController();
-$skillData = $controller->read($skillId);
+$skillController = new SkillController();
+$skillData = $skillController->read($skillId);
+
+if($skillData == null){
+    header("location:index.php?table=skill&action=list");
+    exit();
+}
 
 $allowedExtensions = ["png"];
 $uploadedImgs = [

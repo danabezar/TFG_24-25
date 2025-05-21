@@ -7,10 +7,15 @@ if (!isset($_REQUEST["id"])) {
 }
 
 $skillId = $_REQUEST["id"];
-$imgRoute = "assets\img\skill\\" . $skillId;
+$skillController = new SkillController();
+$skillData = $skillController->read($skillId);
 
-$controller = new skillController();
-$skillData = $controller->read($skillId);
+if($skillData == null){
+    header("location:index.php?table=skill&action=list");
+    exit();
+}
+
+$imgRoute = "assets\img\skill\\" . $skillId;
 
 $messageText = "";
 $messageVisibility = "hidden";

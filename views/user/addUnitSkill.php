@@ -7,6 +7,19 @@ if(!isset($_REQUEST["userId"], $_REQUEST["userUnitId"])){
     exit();
 }
 
+$userId = $_REQUEST["userId"];
+$userController = new UserController();
+$user = $userController->read($userId);
+
+$userUnitId = $_REQUEST["userUnitId"];
+$userUnitController = new UserUnitController();
+$userUnit = $userUnitController->read($userUnitId);
+
+if($user == null || $userUnit == null){
+    header("location:index.php?table=user&action=list");
+    exit();
+}
+
 $errors = [];
 $previousFormData = [];
 $errorString = "Errors were found in the data introduced";
@@ -18,13 +31,7 @@ if (isset($_SESSION["errors"])) {
     $errorVisibility = "visible";
 }
 
-$userId = $_REQUEST["userId"];
-$userUnitId = $_REQUEST["userUnitId"];
-
 $skillController = new SkillController();
-$userUnitController = new UserUnitController();
-
-$userUnit = $userUnitController->read($userUnitId);
 $availableSkills = $userUnitController->listAvailableSkills($userUnitId);
 
 $tableVisibility = "hidden";

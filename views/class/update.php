@@ -7,6 +7,15 @@ if(!isset($_REQUEST["id"])){
     exit();
 }
 
+$id = $_REQUEST["id"];
+$classController = new ClassController();
+$classData = $classController->readDetailed($id);
+
+if($classData == null){
+    header("location:index.php?table=class&action=list");
+    exit();
+}
+
 $errors = [];
 $previousFormData = [];
 $errorString = "Errors were found in the data introduced";
@@ -17,9 +26,6 @@ if (isset($_SESSION["errors"])) {
     $previousFormData = ($_SESSION["formData"]) ?? [];
     $errorVisibility = "visible";
 }
-
-$classController = new ClassController();
-$classData = $classController->readDetailed($_REQUEST["id"]);
 ?>
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">

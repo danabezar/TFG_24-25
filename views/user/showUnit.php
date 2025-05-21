@@ -8,13 +8,18 @@ if (!isset($_REQUEST["userId"], $_REQUEST['userUnitId'])) {
 }
 
 $userId = $_REQUEST["userId"];
-$userUnitId = $_REQUEST["userUnitId"];
-
 $userController = new UserController();
-$userUnitController = new UserUnitController();
-
 $user = $userController->read($userId);
+
+$userUnitId = $_REQUEST["userUnitId"];
+$userUnitController = new UserUnitController();
 $userUnit = $userUnitController->read($userUnitId);
+
+if($user == null || $userUnit == null){
+    header("location:index.php?table=user&action=list");
+    exit();
+}
+
 $userUnitSkills = $userUnitController->getSkillsById($userUnit->id);
 ?>
 

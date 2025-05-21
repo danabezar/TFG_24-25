@@ -7,10 +7,15 @@ if (!isset($_REQUEST["id"])) {
 }
 
 $classId = $_REQUEST["id"];
-$imgRoute = "assets\img\class\\" . $classId ;
+$classController = new ClassController();
+$classData = $classController->read($classId);
 
-$controller = new ClassController();
-$classData = $controller->read($classId);
+if($classData == null){
+    header("location:index.php?table=class&action=list");
+    exit();
+}
+
+$imgRoute = "assets\img\class\\" . $classId;
 
 $messageText = "";
 $messageVisibility = "hidden";

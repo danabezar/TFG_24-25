@@ -1,4 +1,5 @@
 <?php
+require_once "controllers/userController.php";
 require_once "controllers/unitController.php";
 require_once "controllers/userUnitController.php";
 
@@ -7,8 +8,35 @@ $userId = ($_REQUEST["userId"]) ?? "";
 $unitId = ($_REQUEST["unitId"]) ?? "";
 $userUnitId = ($_REQUEST["userUnitId"]) ?? "";
 
-$unitController = new UnitController();
-$userUnitController = new UserUnitController();
+if($userId != null && $userId != ""){
+    $userController = new UserController();
+    $user = $userController->read($userId);
+
+    if($user == null){
+        header("location:index.php?table=user&action=list");
+        exit();
+    }
+}
+
+if($unitId != null && $unitId != ""){
+    $unitController = new UnitController();
+    $unit = $unitController->read($unitId);
+
+    if($unit == null){
+        header("location:index.php?table=user&action=list");
+        exit();
+    }
+}
+
+if($userUnitId != null && $userUnitId != ""){
+    $userUnitController = new UserUnitController();
+    $userUnit = $userUnitController->read($userUnitId);
+
+    if($userUnit == null){
+        header("location:index.php?table=user&action=list");
+        exit();
+    }
+}
 
 $userUnitArrayData = [
     "userId" => $userId,

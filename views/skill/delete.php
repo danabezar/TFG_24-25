@@ -7,6 +7,12 @@ if(!isset($_REQUEST["id"])){
 }
 
 $skillId = $_REQUEST["id"];
+$skillController = new SkillController();
+$skill = $skillController->read($skillId);
 
-$controller = new SkillController();
-$controller->delete($skillId);
+if($skill == null){
+    header("location:index.php?table=skill&action=list");
+    exit();
+}
+
+$skillController->delete($skillId);

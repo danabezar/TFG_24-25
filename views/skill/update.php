@@ -7,6 +7,15 @@ if(!isset($_REQUEST["id"])){
     exit();
 }
 
+$skillId = $_REQUEST["id"];
+$skillController = new SkillController();
+$skillData = $skillController->read($skillId);
+
+if($skillData == null){
+    header("location:index.php?table=skill&action=list");
+    exit();
+}
+
 $errors = [];
 $previousFormData = [];
 $errorString = "Errors were found in the data introduced";
@@ -17,9 +26,6 @@ if (isset($_SESSION["errors"])) {
     $previousFormData = ($_SESSION["formData"]) ?? [];
     $errorVisibility = "visible";
 }
-
-$skillController = new SkillController();
-$skillData = $skillController->read($_REQUEST["id"]);
 ?>
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">

@@ -8,6 +8,15 @@ if(!isset($_REQUEST["id"])){
     exit();
 }
 
+$unitId = $_REQUEST["id"];
+$unitController = new UnitController();
+$unitData = $unitController->read($unitId);
+
+if($unitData == null){
+    header("location:index.php?table=unit&action=list");
+    exit();
+}
+
 $errors = [];
 $previousFormData = [];
 $errorString = "Errors were found in the data introduced";
@@ -20,9 +29,7 @@ if (isset($_SESSION["errors"])) {
 }
 
 $classController = new ClassController();
-$unitController = new UnitController();
 $classes = $classController->list();
-$unitData = $unitController->read($_REQUEST["id"]);
 ?>
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">

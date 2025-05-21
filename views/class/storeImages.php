@@ -7,8 +7,13 @@ if(isset($_REQUEST["id"]) && filter_var($_REQUEST["id"], FILTER_VALIDATE_INT)){
     header("location:index.php?table=class&action=list");
 }
 
-$controller = new ClassController();
-$classData = $controller->read($classId);
+$classController = new ClassController();
+$classData = $classController->read($classId);
+
+if($classData == null){
+    header("location:index.php?table=class&action=list");
+    exit();
+}
 
 $allowedExtensions = ["png"];
 $uploadedImgs = [

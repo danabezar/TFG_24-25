@@ -1,5 +1,6 @@
 <?php
 require_once "controllers/classController.php";
+require_once "controllers/skillController.php";
 
 if(!isset($_REQUEST["id"], $_REQUEST["skillId"])){
     header('location:index.php?table=class&action=list');
@@ -7,7 +8,16 @@ if(!isset($_REQUEST["id"], $_REQUEST["skillId"])){
 }
 
 $classId = $_REQUEST["id"];
-$skillId = $_REQUEST["skillId"];
+$classController = new ClassController();
+$class = $classController->read($classId);
 
-$controller = new ClassController();
-$controller->removeSkill($classId, $skillId);
+$skillId = $_REQUEST["skillId"];
+$skillController = new SkillController();
+$skill = $skillController->read($skillId);
+
+if($class == null || $skill == null){
+    header("location:index.php?table=class&action=list");
+    exit();
+}
+
+$classController->removeSkill($classId, $skillId);

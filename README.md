@@ -1,7 +1,7 @@
 PENDING
-- Base INT values check in Class, Skill, Unit and UserUnit 
-- If an ID not registered in the DB is put on the URL, redirect
+- Exhaustive testing of all the actions, due to the recent changes in ID checks
 - Change Create method from User, not using the method added in functions.php
+- Add new Table for Class Promotions
 
 OPTIONAL
 - Turn image uploading process into a method

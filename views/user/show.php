@@ -7,11 +7,16 @@ if (!isset($_REQUEST['id'])) {
     exit();
 }
 
-$id = $_REQUEST['id'];
-$controller = new UserController();
-$userUnitController = new UserUnitController();
+$id = $_REQUEST["id"];
+$userController = new UserController();
+$user = $userController->read($id);
 
-$user = $controller->read($id);
+if($user == null){
+    header("location:index.php?table=user&action=list");
+    exit();
+}
+
+$userUnitController = new UserUnitController();
 $userUnits = $userUnitController->listByUserId($user->id);
 ?>
 

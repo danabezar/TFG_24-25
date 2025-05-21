@@ -7,6 +7,12 @@ if(!isset($_REQUEST["id"])){
 }
 
 $unitId = $_REQUEST["id"];
+$unitController = new UnitController();
+$unit = $unitController->read($unitId);
 
-$controller = new UnitController();
-$controller->delete($unitId);
+if($unit == null){
+    header("location:index.php?table=unit&action=list");
+    exit();
+}
+
+$unitController->delete($unitId);

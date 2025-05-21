@@ -7,6 +7,15 @@ if(!isset($_REQUEST["id"])){
     exit();
 }
 
+$classId = $_REQUEST["id"];
+$classController = new ClassController();
+$class = $classController->read($classId);
+
+if($class == null){
+    header("location:index.php?table=class&action=list");
+    exit();
+}
+
 $errors = [];
 $previousFormData = [];
 $errorString = "Errors were found in the data introduced";
@@ -18,10 +27,7 @@ if (isset($_SESSION["errors"])) {
     $errorVisibility = "visible";
 }
 
-$classId = $_REQUEST["id"];
-$classController = new ClassController();
 $skillController = new SkillController();
-$class = $classController->read($classId);
 $availableSkills = $skillController->getAvailableForClass($classId);
 $tableVisibility = "hidden";
 ?>
