@@ -196,6 +196,60 @@ class ClassModel implements BaseModel{
     }
 
     /**
+     * List every entry in the database's "unit" table who have a particular "class" ID
+     * 
+     * @param int $classId ID of the "class" to look for
+     * 
+     * @return array|null $classes Returns an array with all the rows from the table, null if there were none
+     */
+    public function readAllUnitsWithClass(int $classId): array | null{
+        $sqlQuery = "
+            SELECT * 
+            FROM `unit` 
+            WHERE `class_id` = :classId;
+        ";
+        $preparedQuery = $this->connection->prepare($sqlQuery);
+        $dataArray = [
+            ":classId" => $classId
+        ];
+        $result = $preparedQuery->execute($dataArray);
+
+        if (!$result) {
+            return null;
+        } else {
+            $classes = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
+            return $classes;
+        }
+    }
+
+    /**
+     * List every entry in the database's "user_unit" table who have a particular "class" ID
+     * 
+     * @param int $classId ID of the "class" to look for
+     * 
+     * @return array|null $classes Returns an array with all the rows from the table, null if there were none
+     */
+    public function readAllUserUnitsWithClass(int $classId): array | null{
+        $sqlQuery = "
+            SELECT * 
+            FROM `user_unit` 
+            WHERE `class_id` = :classId;
+        ";
+        $preparedQuery = $this->connection->prepare($sqlQuery);
+        $dataArray = [
+            ":classId" => $classId
+        ];
+        $result = $preparedQuery->execute($dataArray);
+
+        if (!$result) {
+            return null;
+        } else {
+            $classes = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
+            return $classes;
+        }
+    }
+
+    /**
      * Updates the data from a particular row in the "class" table
      * 
      * @param int $id ID of the row whose info will be changed

@@ -88,17 +88,16 @@ if (isset($_REQUEST["event"])) {
                                         <td>
                                             <a class="btn btn-warning" href="index.php?table=class&action=show&id=<?= $filteredClass->id ?>"><i class="fa fa-eye"></i> Show</a>     
                                             <a class="btn btn-success" href="index.php?table=class&action=update&id=<?= $id ?>"><i class='fas fa-pencil-alt'></i> Edit</a>
-                                            <?php
-                                            // $deletionAllowed = "";
-                                            // $deletionRoute = "index.php?table=class&action=delete&id={$id}";
-                                            // if ((isset($digimonInd->esBorrable) && $digimonInd->esBorrable == false) || ($digimonInd->esDigievolucion)) {
-                                            //     $habilitado = "disabled";
-                                            //     $rutaDeAccion = "#";
-                                            // }
-                                            ?>
-                                            <!-- <a class="btn btn-danger <?= $habilitado ?>" href="<?= $rutaDeAccion ?>"><i class="fa fa-trash"></i> Borrar</a> -->
                                             <a class="btn btn-primary" href="index.php?table=class&action=editImages&id=<?= $filteredClass->id ?>"><i class="fa fa-camera"></i> Images</a>
-                                            <a class="btn btn-danger" href="index.php?table=class&action=delete&id=<?= $filteredClass->id ?>"><i class="fa fa-trash"></i> Delete</a>
+                                            <?php
+                                            $deletionAllowed = "";
+                                            $deletionRoute = "index.php?table=class&action=delete&id=" . $filteredClass->id;
+                                            if ((isset($filteredClass->canBeErased) && $filteredClass->canBeErased == false)) {
+                                                $deletionAllowed = "disabled";
+                                                $deletionRoute = "#";
+                                            }
+                                            ?>
+                                            <a class="btn btn-danger <?= $deletionAllowed ?>" href="<?= $deletionRoute ?>"><i class="fa fa-trash"></i> Delete</a>
                                         </td>
                                     </tr>
                                 <?php

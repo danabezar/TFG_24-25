@@ -408,10 +408,26 @@ class UserUnitModel implements BaseModel{
         }
     }
 
+    /**
+     * Checks if a value from a certain field is already registered in the table
+     * 
+     * @param string $field Name of the field to check
+     * @param string $fieldValue Value of the field to check
+     * 
+     * @return bool Indicates whether the value is already registered or not
+     */
     public function exists(string $field, string $fieldValue): bool{
         return true;
     }
 
+    /**
+     * Adds a new entry in the "user_unit_stat_gains" table, referencing the ID of an existing "user_unit"
+     * 
+     * @param $userUnitId ID of the "user_unit" referenced
+     * @param $statGains Array with the data needed for the insertion
+     * 
+     * @return int|null Returns an int if the insertion was successful, null if it wasn't
+     */
     public function addStatGains(int $userUnitId, $statGains): int | null{
         try {
             $sqlQuery = "
@@ -466,6 +482,14 @@ class UserUnitModel implements BaseModel{
         }
     }
 
+    /**
+     * Updates an entry in the "user_unit_stat_gains" table
+     * 
+     * @param $userUnitId ID of the "user_unit" referenced in the row to be updated
+     * @param $statGains Array with the data needed for the update
+     * 
+     * @return bool Indicates whether the update was successful or not
+     */
     public function updateStatGains(int $userUnitId, $statGains): bool {
         try {
             $sqlQuery = "
@@ -493,6 +517,13 @@ class UserUnitModel implements BaseModel{
         }
     }
 
+    /**
+     * Deletes a row from the "user_unit_stat_gains" table
+     * 
+     * @param int $userUnitId ID of the "user_unit" referenced in the row to be deleted
+     * 
+     * @return bool Indicates whether the deletion was successful or not
+     */
     public function deleteStatGains($userUnitId): bool {
         $sqlQuery = "DELETE FROM `user_unit_stat_gains` WHERE `user_unit_id` = :userUnitId";
 
@@ -595,6 +626,14 @@ class UserUnitModel implements BaseModel{
         }
     }
 
+    /**
+     * Adds a new entry in the "user_unit_equipped_skill" table
+     * 
+     * @param int $userUnitId ID of a "user_unit"
+     * @param int $userUnitSkill ID of a "user_unit_skill"
+     * 
+     * @return int|null Returns an int if the insertion was successful, null if it wasn't
+     */
     public function equipSkill($userUnitId, $userUnitSkillId): int | null {
         try {
             $sqlQuery = "
@@ -614,6 +653,12 @@ class UserUnitModel implements BaseModel{
         }
     }
 
+    /**
+     * List every entry in "user_unit_equipped_skill" table and returns their info
+     * 
+     * @param int $userUnitId ID of the "user_unit" referenced by the rows that will be retrieved
+     * @return array|null $userUnitEquippedSkills Returns an array with all the rows from the table, null if there were none
+     */
     public function getEquippedSkillsById($userUnitId): array | null {
         $sqlQuery = "
             SELECT * FROM `user_unit_equipped_skill` 
@@ -633,6 +678,14 @@ class UserUnitModel implements BaseModel{
         }
     }
 
+    /**
+     * Removes an existing row from the "user_unit_skill" table
+     * 
+     * @param int $userUnitId ID of a "user_unit"
+     * @param int $skillId ID of a "skill"
+     * 
+     * @return bool Indicates whether the deletion was successful or not
+     */
     public function unequipSkill($userUnitSkillId): bool {
         $sqlQuery = "
             DELETE FROM `user_unit_equipped_skill` 

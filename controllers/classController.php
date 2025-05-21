@@ -125,6 +125,13 @@ class ClassController{
      */
     public function list(bool $canBeErased = false): array | null {
         $classes = $this->model->readAll();
+
+        if ($canBeErased) {
+            foreach ($classes as $class) {
+                $class->canBeErased = $this->canBeErased($class);
+            }
+        }
+
         return $classes;
     }
 
@@ -137,6 +144,13 @@ class ClassController{
      */
     public function listDetailed(bool $canBeErased = false): array | null {
         $classes = $this->model->readAllDetailed();
+
+        if ($canBeErased) {
+            foreach ($classes as $class) {
+                $class->canBeErased = $this->canBeErased($class);
+            }
+        }
+
         return $classes;
     }
 
@@ -237,6 +251,13 @@ class ClassController{
         bool  $canBeErased = false
         ): array | null{
             $classes = $this->model->search($field, $searchType, $searchString);
+
+            if ($canBeErased) {
+                foreach ($classes as $class) {
+                    $class->canBeErased = $this->canBeErased($class);
+                }
+            }
+
             return $classes;
     }
 
@@ -325,5 +346,24 @@ class ClassController{
         $this->model->removeSkill($classId, $skillId);
         header("location:index.php?table=class&action=show&id=" . $classId);
         exit();
+    }
+
+    /**
+     * Checks if a "class" entry can be erased by checking if it's currently being used as a foreign key
+     * 
+     * @param stdClass $class "class" which will be checked
+     * 
+     * @return bool $canBeErased Indicates whether the "class" can be deleted or not
+     */
+    private function canBeErased(stdClass $class): bool{
+        $canBeErased = true;
+        $unitsWithClass = $this->model->readAllUnitsWithClass($class->id);
+        $userUnitsWithClass = $this->model->readAllUserUnitsWithClass($class->id);
+        
+        if (count($unitsWithClass) > 0 || count($userUnitsWithClass) > 0){
+            $canBeErased = false;
+        }
+
+        return $canBeErased;
     }
 }
