@@ -454,6 +454,136 @@ class ClassModel implements BaseModel{
     }
 
     /**
+     * Inserts a new row in the "class_promotion" table
+     * 
+     * @param int $starterId The ID of the starter class
+     * @param int $promotedId The ID of the promoted class
+     * 
+     * @return int|null If the insertion was successful, an int will be returned, else a null will
+     */
+    public function addPromotion(int $starterId, int $promotedId): int | null {
+        try {
+            $sqlQuery = "
+                INSERT INTO `class_promotion`(`starter_id`, `promoted_id`) 
+                VALUES (:starterId, :promotedId);
+            ";
+            $preparedQuery = $this->connection->prepare($sqlQuery);
+            $dataArray = [
+                ":starterId" => $starterId,
+                ":promotedId" => $promotedId
+            ];
+            $result = $preparedQuery->execute($dataArray);
+            
+            return ($result == true) ? $this->connection->lastInsertId() : null;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Lists every "class_promotion" linked to a particular "class" ID
+     * 
+     * @param int $classID The ID of the "class"
+     * 
+     * @return array|null Returns an array with all the rows found, or null if there weren't any
+     */
+    public function readPromotions(int $classId): array | null {
+        $sqlQuery = "
+            SELECT p.`promoted_id`, c.`name`,
+            g.`health` AS `health_growth`, g.`strength` AS `strength_growth`, 
+            g.`magic` AS `magic_growth`, g.`skill` AS `skill_growth`, 
+            g.`speed` AS `speed_growth`, g.`luck` AS `luck_growth`, 
+            g.`defense` AS `defense_growth`, g.`resistance` AS `resistance_growth` 
+            FROM `class_promotion` p
+            LEFT JOIN `class` c
+            ON (p.`promoted_id` = c.`id`) 
+            LEFT JOIN `class_growths` g 
+            ON (p.`promoted_id` = g.`class_id`) 
+            WHERE p.`starter_id` = :starterId 
+            ORDER BY p.`promoted_id`;
+        ";
+        $preparedQuery = $this->connection->prepare($sqlQuery);
+        $dataArray = [
+            ":starterId" => $classId
+        ];
+        $result = $preparedQuery->execute($dataArray);
+
+        if (!$result) {
+            return null;
+        } else {
+            $classes = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
+            return $classes;
+        }
+    }
+
+    /**
+     * Lists every "class_promotion" not yet linked to a particular "class" ID
+     * 
+     * @param int $classID The ID of the "class"
+     * 
+     * @return array|null Returns an array with all the rows found, or null if there weren't any
+     */
+    public function readAvailablePromotions(int $classId): array | null {
+        $sqlQuery = "
+            SELECT c.`id`, c.`name`,
+            g.`health` AS `health_growth`, g.`strength` AS `strength_growth`, 
+            g.`magic` AS `magic_growth`, g.`skill` AS `skill_growth`, 
+            g.`speed` AS `speed_growth`, g.`luck` AS `luck_growth`, 
+            g.`defense` AS `defense_growth`, g.`resistance` AS `resistance_growth` 
+            FROM `class` c
+            LEFT JOIN `class_growths` g 
+            ON (c.`id` = g.`class_id`) 
+            WHERE c.`type` = 'Promoted' 
+            AND c.`id` NOT IN 
+            (SELECT `promoted_id` 
+            FROM `class_promotion`
+            WHERE `starter_id` = :starterId)
+            ORDER BY c.`id`;
+        ";
+        $preparedQuery = $this->connection->prepare($sqlQuery);
+        $dataArray = [
+            ":starterId" => $classId
+        ];
+        $result = $preparedQuery->execute($dataArray);
+
+        if (!$result) {
+            return null;
+        } else {
+            $classes = $preparedQuery->fetchAll(PDO::FETCH_OBJ);
+            return $classes;
+        }
+    }
+
+    /**
+     * Deletes a row in the "class_promotion" table
+     * 
+     * @param int $starterId The ID of the starter class
+     * @param int $promotionId The ID of the promoted class
+     * 
+     * @return bool Indicates whether the deletion was successful or not
+     */
+    public function removePromotion(int $starterId, int $promotedId): bool {
+        $sqlQuery = "
+            DELETE FROM `class_promotion` 
+            WHERE `starter_id` = :starterId AND `promoted_id` = :promotedId;
+        ";
+
+        try {
+            $preparedQuery = $this->connection->prepare($sqlQuery);
+            $dataArray = [
+                ":starterId" => $starterId,
+                ":promotedId" => $promotedId
+            ];
+            $result = $preparedQuery->execute($dataArray);
+
+            return ($preparedQuery->rowCount() > 0) ? true : false;
+        } catch (Exception $error) {
+            echo 'An exception ocurred while deleting a Class\' promotion: ',  $error->getMessage(), "<br>";
+            return false;
+        }
+    }
+
+    /**
      * Adds a new entry in the "class_skill" table
      * 
      * @param int $classId ID of the "class" who will be linked to the "skill"

@@ -309,6 +309,52 @@ class ClassController{
     }
 
     /**
+     * Inserts a new row in the "class_promotion" table
+     * 
+     * @param int $starterId The ID of the starter class
+     * @param int $promotedId The ID of the promoted class
+     * 
+     * @return int|null If the insertion was successful, an int will be returned, else a null will
+     */
+    public function addPromotion(int $starterId, int $promotedId): int | null {
+        return $this->model->addPromotion($starterId, $promotedId);
+    }
+
+    /**
+     * Lists every "class_promotion" linked to a particular "class" ID
+     * 
+     * @param int $classID The ID of the "class"
+     * 
+     * @return array|null Returns an array with all the rows found, or null if there weren't any
+     */
+    public function readPromotions(int $classId): array | null {
+        return $this->model->readPromotions($classId);
+    }
+
+    /**
+     * Lists every "class_promotion" not yet linked to a particular "class" ID
+     * 
+     * @param int $classID The ID of the "class"
+     * 
+     * @return array|null Returns an array with all the rows found, or null if there weren't any
+     */
+    public function readAvailablePromotions(int $classId): array | null {
+        return $this->model->readAvailablePromotions($classId);
+    }
+
+    /**
+     * Deletes a row in the "class_promotion" table
+     * 
+     * @param int $starterId The ID of the starter class
+     * @param int $promotedId The ID of the promoted class
+     * 
+     * @return bool Indicates whether the deletion was successful or not
+     */
+    public function removePromotion(int $starterId, int $promotedId): bool {
+        return $this->model->removePromotion($starterId, $promotedId);
+    }
+
+    /**
      * Adds a new entry in the "class_skill" table
      * 
      * @param array $classArrayData Array with the required data for the new entry

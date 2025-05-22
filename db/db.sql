@@ -40,6 +40,17 @@ CREATE TABLE `class_growths` (
   CONSTRAINT `class_growths_FK` FOREIGN KEY (`class_id`) REFERENCES `class` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 'class_promotion' table definition
+CREATE TABLE `class_promotion` (
+  `starter_id` bigint(20) unsigned NOT NULL,
+  `promoted_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`starter_id`, `promoted_id`),
+  KEY `class_promotion_starter_id_foreign` (`starter_id`) USING BTREE,
+  KEY `class_promotion_promoted_id_foreign` (`promoted_id`) USING BTREE,
+  CONSTRAINT `class_promotion_starter_id_FK` FOREIGN KEY (`starter_id`) REFERENCES `class` (`id`) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT `class_promotion_promoted_id_FK` FOREIGN KEY (`promoted_id`) REFERENCES `class` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- 'skill' table definition
 CREATE TABLE `skill` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,

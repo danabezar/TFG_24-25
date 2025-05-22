@@ -46,7 +46,10 @@ function router (){
             "addSkill" => "addSkill.php",
             "deleteSkill" => "deleteSkill.php",
             "editImages" => "editImages.php",
-            "storeImages" => "storeImages.php"
+            "storeImages" => "storeImages.php",
+            "addPromotion" => "addPromotion.php",
+            "storePromotion" => "storePromotion.php",
+            "deletePromotion" => "deletePromotion.php"
         ],
         "skill" => [
             "create" => "create.php",
