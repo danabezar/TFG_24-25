@@ -6,7 +6,7 @@ if(!isset($_REQUEST["id"])){
     exit();
 }
 
-$userId = $_REQUEST["userId"];
+$userId = $_REQUEST["id"];
 $userController = new UserController();
 $user = $userController->read($userId);
 

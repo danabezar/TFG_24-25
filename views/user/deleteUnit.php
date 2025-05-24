@@ -1,4 +1,5 @@
 <?php
+require_once "controllers/userController.php";
 require_once "controllers/userUnitController.php";
 
 if(!isset($_REQUEST["userId"], $_REQUEST["userUnitId"])){

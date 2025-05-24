@@ -8,8 +8,12 @@ $userId = ($_REQUEST["userId"]) ?? "";
 $unitId = ($_REQUEST["unitId"]) ?? "";
 $userUnitId = ($_REQUEST["userUnitId"]) ?? "";
 
+$userController = new UserController();
+$unitController = new UnitController();
+$userUnitController = new UserUnitController();
+
+
 if($userId != null && $userId != ""){
-    $userController = new UserController();
     $user = $userController->read($userId);
 
     if($user == null){
@@ -19,7 +23,6 @@ if($userId != null && $userId != ""){
 }
 
 if($unitId != null && $unitId != ""){
-    $unitController = new UnitController();
     $unit = $unitController->read($unitId);
 
     if($unit == null){
@@ -29,7 +32,6 @@ if($unitId != null && $unitId != ""){
 }
 
 if($userUnitId != null && $userUnitId != ""){
-    $userUnitController = new UserUnitController();
     $userUnit = $userUnitController->read($userUnitId);
 
     if($userUnit == null){

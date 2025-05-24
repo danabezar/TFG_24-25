@@ -9,7 +9,6 @@ class UserController{
         $this->model = new UserModel();
     }
 
-    //TODO: UPDATE, NOT USING THE METHOD IN FUNCTIONS.PHP
     /**
      * Inserts a new entry in the database's "user" table
      * 
@@ -24,42 +23,26 @@ class UserController{
         $_SESSION["formData"] = [];
 
         //Empty field checks
-        $nonNullableFields = ["username", "password"];
-        $foundNullFields = areThereNullFields($nonNullableFields, $userDataArray);
-
-        if (count($foundNullFields) > 0) {
-            $error = true;
-            for ($i = 0; $i < count($foundNullFields); $i++) {
-                $errors[$foundNullFields[$i]][] = "The {$foundNullFields[$i]} field is null";
-            }
-        }
-
-        //Unique fields checks
+        $nonNullableFields = [
+            "username", 
+            "password"
+        ];
         $uniqueFields = ["username"];
+        $dataIsValid = isValidFormData($nonNullableFields, $uniqueFields, $userDataArray, $this->model);
 
-        foreach ($uniqueFields as $uniqueField) {
-            if ($this->model->exists($uniqueField, $userDataArray[$uniqueField])) {
-                $error = true;
-                $errors[$uniqueField][] = "Value {$userDataArray[$uniqueField]} for {$uniqueField} is already registered";
+        if($dataIsValid){
+            $newUserId = $this->model->insert($userDataArray);
+
+            if($newUserId != null){
+                header("location:index.php?table=user&action=show&id=".$newUserId);
+                exit();
+
+            }else{
+                header("location:index.php?table=user&action=create&error=true");
+                exit();
             }
-        }
-
-        //Final check. If no errors were found, the insertion is made
-        if (!$error) {
-            $id = $this->model->insert($userDataArray);
-        } else {
-            $id = null;
-        }
-
-        if ($id == null) {
-            $_SESSION["errors"] = $errors;
-            $_SESSION["formData"] = $userDataArray;
+        }else{
             header("location:index.php?table=user&action=create&error=true");
-            exit();
-        } else {
-            unset($_SESSION["errors"]);
-            unset($_SESSION["formData"]);
-            header("location:index.php?table=user&action=show&id=".$id);
             exit();
         }
     }

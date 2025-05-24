@@ -29,7 +29,7 @@ class SkillController{
             TODO: ADD FORMATTING CHECKS HERE
             */
             $newSkillId = $this->model->insert($skillDataArray);
-            header("location:index.php?table=skill&action=list");
+            header("location:index.php?table=skill&action=show&id=" . $newSkillId);
             exit();
         }else{
             header("location:index.php?table=skill&action=create&error=true");

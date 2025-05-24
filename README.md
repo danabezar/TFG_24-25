@@ -1,6 +1,7 @@
 PENDING
-- Exhaustive testing of all the actions, due to the recent changes in ID checks
-- Change Create method from User, not using the method added in functions.php
+-- Add some extra entries to the DB
+-- Add more images
+-- When adding a Skill, make sure the values are of the attributes are valid
 
 OPTIONAL
 - Turn image uploading process into a method

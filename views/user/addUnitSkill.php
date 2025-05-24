@@ -1,4 +1,5 @@
 <?php
+require_once "controllers/userController.php";
 require_once "controllers/skillController.php";
 require_once "controllers/userUnitController.php";
 
