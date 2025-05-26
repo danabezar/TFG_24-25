@@ -26,6 +26,8 @@ $uploadedImgs = [
 ];
 
 $imgRoute = "assets\img\unit\\" . $unitId;
+$imgRouteStarter = $imgRoute . "\\starter";
+$imgRoutePromoted = $imgRoute . "\\promoted";
 $uploadResults = [];
 if(isset($_SESSION["uploadResults"])){
     unset($_SESSION["uploadResults"]);
@@ -33,6 +35,14 @@ if(isset($_SESSION["uploadResults"])){
 
 if(!file_exists($imgRoute)){
     mkdir($imgRoute);
+}
+
+if(!file_exists($imgRouteStarter)){
+    mkdir($imgRouteStarter);
+}
+
+if(!file_exists($imgRoutePromoted)){
+    mkdir($imgRoutePromoted);
 }
 
 foreach($uploadedImgs as $key => $fileInfo){

@@ -250,6 +250,10 @@ COMMIT;
 -- 'unit' table default entries
 INSERT INTO unit (name, class_id) VALUES
 ("Edelgard", 5),
+("Dimitri", 4),
+("Claude", 3),
+("Felix", 2), 
+("Hapi", 6),
 ("Shamir", 11),
 ("Alois", 8);
 
@@ -259,8 +263,12 @@ COMMIT;
 -- 'unit_base_stats' table default entries
 INSERT INTO unit_base_stats (unit_id, level, health, strength, magic, skill, speed, luck, defense, resistance) VALUES 
 (1, 1, 29, 13, 6, 6, 8, 5, 6, 4),
-(2, 11, 33, 18, 8, 21, 14, 17, 12, 8),
-(3, 21, 50, 27, 8, 12, 15, 12, 18, 8);
+(2, 1, 28, 12, 4, 7, 7, 5, 7, 4),
+(3, 1, 26, 11, 5, 8, 8, 7, 6, 4),
+(4, 1, 26, 10, 5, 6, 9, 5, 5, 3),
+(5, 3, 27, 7, 12, 9, 7, 4, 4, 8),
+(6, 11, 33, 18, 8, 21, 14, 17, 12, 8),
+(7, 21, 50, 27, 8, 12, 15, 12, 18, 8);
 
 COMMIT;
 
@@ -268,35 +276,39 @@ COMMIT;
 -- 'unit_growths' table default entries
 INSERT INTO unit_growths (unit_id, health, strength, magic, skill, speed, luck, defense, resistance) VALUES
 (1, 40, 55, 45, 45, 40, 30, 35, 35),
-(2, 35, 40, 20, 55, 40, 55, 20, 15),
-(3, 45, 45, 20, 35, 40, 30, 40, 20);
+(2, 55, 60, 20, 50, 50, 25, 40, 20),
+(3, 35, 40, 25, 60, 55, 45, 30, 25),
+(4, 45, 55, 30, 45, 55, 40, 30, 20),
+(5, 35, 35, 45, 45, 40, 20, 15, 45),
+(6, 35, 40, 20, 55, 40, 55, 20, 15),
+(7, 45, 45, 20, 35, 40, 30, 40, 20);
 
 COMMIT;
 
 
 -- 'user_unit' table default entries
-INSERT INTO user_unit (user_id, unit_id, class_id) VALUES
-(1, 1, 5), (1, 2, 11), (1, 3, 8), (2, 3, 8);
+-- INSERT INTO user_unit (user_id, unit_id, class_id) VALUES
+-- (1, 1, 5), (1, 2, 11), (1, 3, 8), (2, 3, 8);
 
-COMMIT;
+-- COMMIT;
 
 
 -- 'user_unit_stat_gains' table default entries
-INSERT INTO user_unit_stat_gains (user_unit_id) VALUES
-(1), (2), (3), (4);
+-- INSERT INTO user_unit_stat_gains (user_unit_id) VALUES
+-- (1), (2), (3), (4);
 
-COMMIT;
+-- COMMIT;
 
 
 -- 'user_unit_skill' table default entries
-INSERT INTO user_unit_skill (user_unit_id, skill_id) VALUES 
-(2, 1);
+-- INSERT INTO user_unit_skill (user_unit_id, skill_id) VALUES 
+-- (2, 1);
 
-COMMIT;
+-- COMMIT;
 
 
 -- 'user_unit_equipped_skill' table default entries
-INSERT INTO user_unit_equipped_skill (user_unit_id, user_unit_skill_id) VALUES
-(2, 1);
+-- INSERT INTO user_unit_equipped_skill (user_unit_id, user_unit_skill_id) VALUES
+-- (2, 1);
 
-COMMIT;
+-- COMMIT;
