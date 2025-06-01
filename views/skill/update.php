@@ -85,15 +85,15 @@ if (isset($_SESSION["errors"])) {
                 <label for="attribute">Attribute</label>
                 <select id="attribute-select" name="attribute">
                     <?php
-                        $currentType = $_SESSION["formData"]["type"] ?? $skillData->type;
-                        switch($currentType){
-                            case "Stat Boost":
-                                $optionValues = ["Health", "Strength", "Magic", "Skill", "Speed", "Luck", "Defense", "Resistance"];
-                                break;
-                            default: 
-                                $optionValues = ["Attack", "Hit"];
-                                break;
-                        }
+                        // $currentType = $_SESSION["formData"]["type"] ?? $skillData->type;
+                        // switch($currentType){
+                        //     case "Stat Boost":
+                                $optionValues = ["Health", "Strength", "Magic", "Skill", "Speed", "Luck", "Defense", "Resistance", "Attack", "Hit", "Crit", "Reduction", "Avoid", "Dodge"];
+                        //         break;
+                        //     default: 
+                        //         $optionValues = ["Attack", "Hit"];
+                        //         break;
+                        // }
 
                         for($i = 0; $i < count($optionValues); $i++){
                             $newOption = "<option value={$optionValues[$i]} ";

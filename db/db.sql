@@ -12,6 +12,9 @@ CREATE TABLE `user` (
   `password` varchar(255) NOT NULL,
   `victories` INT DEFAULT 0 COMMENT 'Matches won by the user',
   `losses` INT DEFAULT 0 COMMENT 'Matches lost by the user',
+  `master_seals` INT DEFAULT 0 COMMENT 'Number of promotions ready to use the user has',
+  `lottery_vouchers` INT DEFAULT 0 COMMENT 'Number of tries at the lottery available',
+  `master_seal_lock` INT DEFAULT 0 COMMENT 'Dictates whether the User can or not get Master Seals',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -20,6 +23,7 @@ CREATE TABLE `class` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) UNIQUE NOT NULL,
   `type` varchar(50) NOT NULL,
+  `dmg_type` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -58,6 +62,7 @@ CREATE TABLE `skill` (
   `type` varchar(50) NOT NULL, 
   `attribute` varchar(50) NOT NULL,
   `value` INT NOT NULL,
+  `description` varchar(255),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -70,8 +75,8 @@ CREATE TABLE `class_skill` (
   PRIMARY KEY (`id`),
   KEY `class_skill_class_id_foreign` (`class_id`) USING BTREE,
   KEY `class_skill_skill_id_foreign` (`skill_id`) USING BTREE,
-  CONSTRAINT `class_skill_FK_1` FOREIGN KEY (`class_id`) REFERENCES `class` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `class_skill_FK_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `class_skill_FK_1` FOREIGN KEY (`class_id`) REFERENCES `class` (`id`) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT `class_skill_FK_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 'unit' table definition
@@ -162,7 +167,7 @@ CREATE TABLE `user_unit_skill` (
   KEY `user_unit_skill_user_unit_id_foreign` (`user_unit_id`) USING BTREE,
   KEY `user_unit_skill_skill_id_foreign` (`skill_id`) USING BTREE,
   CONSTRAINT `user_unit_skill_FK_1` FOREIGN KEY (`user_unit_id`) REFERENCES `user_unit` (`id`) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT `user_unit_skill_FK_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `user_unit_skill_FK_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 'user_unit_equipped_skill' table definition
@@ -174,7 +179,7 @@ CREATE TABLE `user_unit_equipped_skill` (
   KEY `user_unit_equipped_skill_user_unit_id_foreign` (`user_unit_id`) USING BTREE,
   KEY `user_unit_equipped_skill_user_unit_skill_id_foreign` (`user_unit_skill_id`) USING BTREE,
   CONSTRAINT `user_unit_equipped_skill_FK_1` FOREIGN KEY (`user_unit_id`) REFERENCES `user_unit` (`id`) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT `user_unit_equipped_skill_FK_2` FOREIGN KEY (`user_unit_skill_id`) REFERENCES `user_unit_skill` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `user_unit_equipped_skill_FK_2` FOREIGN KEY (`user_unit_skill_id`) REFERENCES `user_unit_skill` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
@@ -187,24 +192,22 @@ COMMIT;
 
 
 -- 'class' table default entries
-INSERT INTO class (name, type) VALUES
-('Mercenary', 'Starter'),
-('Myrmidon', 'Starter'),
-('Archer', 'Starter'),
-('Cavalier', 'Starter'),
-('Wyvern Rider', 'Starter'),
-('Mage', 'Starter'),
-('Hero', 'Promoted'),
-('Berserker', 'Promoted'),
-('Swordmaster', 'Promoted'),
-('Assassin', 'Promoted'),
-('Sniper', 'Promoted'),
-('Paladin', 'Promoted'),
-('Great Knight', 'Promoted'),
-('Wyvern Lord', 'Promoted'),
-('Malig Knight', 'Promoted'),
-('Sorcerer', 'Promoted'),
-('Dark Knight', 'Promoted');
+INSERT INTO class (name, type, dmg_type) VALUES
+('Mercenary', 'Starter', 0),
+('Myrmidon', 'Starter', 0),
+('Archer', 'Starter', 0),
+('Cavalier', 'Starter', 0),
+('Wyvern Rider', 'Starter', 0),
+('Mage', 'Starter', 1),
+('Hero', 'Promoted', 0),
+('Berserker', 'Promoted', 0),
+('Swordmaster', 'Promoted', 0),
+('Assassin', 'Promoted', 0),
+('Sniper', 'Promoted', 0),
+('Paladin', 'Promoted', 0),
+('Great Knight', 'Promoted', 0),
+('Wyvern Lord', 'Promoted', 0),
+('Sorcerer', 'Promoted', 1);
 
 COMMIT;
 
@@ -225,24 +228,66 @@ INSERT INTO class_growths (health, strength, magic, skill, speed, luck, defense,
 (15, 10, 10, 10, 10, 15, 15, 10, 12), -- Paladin
 (20, 15, 0, 15, 0, 10, 20, 0, 13), -- Great Knight
 (20, 20, 0, 15, 10, 10, 15, 5, 14), -- Wyvern Lord
-(15, 10, 15, 10, 10, 5, 10, 10, 15), -- Malig Knight
-(5, 0, 20, 10, 15, 10, 0, 15, 16), -- Sorcerer
-(10, 10, 10, 15, 10, 15, 15, 10, 17); -- Dark Knight
+(5, 0, 20, 10, 15, 10, 0, 15, 15); -- Sorcerer
+
+COMMIT;
+
+-- 'class_promotion' table default entries
+INSERT INTO class_promotion (starter_id, promoted_id) VALUES
+(1, 7), (1, 8),
+(2, 9), (2, 10),
+(3, 11),
+(4, 12), (4, 13),
+(5, 14),
+(6, 15);
 
 COMMIT;
 
 
 -- 'skill' table default entries
-INSERT INTO skill (name, type, attribute, value) VALUES
-("Quick Draw", "Attacker Boost", "Attack", 4),
-("Strong Riposte", "Defender Boost", "Attack", 3);
+INSERT INTO skill (name, type, attribute, value, description) VALUES
+("HP +5", "Stat Boost", "Health", 5, "Grants +5 to Unit's Health Points"),
+("Strong Riposte", "Defender Boost", "Attack", 3, "If unit does not attack first, deal 3 additional damage"),
+("Speed +2", "Stat Boost", "Speed", 2, "Grants +2 to Unit's Speed"),
+("Avoid +10", "Stat Boost", "Avoid", 10, "Grants +10 to Unit's Avoid"),
+("Skill +2", "Stat Boost", "Skill", 2, "Grants +2 to Unit's Skill"),
+("Quick Draw", "Attacker Boost", "Attack", 4, "If unit attacks first, deal 4 additional damage"),
+("Defense +2", "Stat Boost", "Defense", 2, "Grants +2 to Unit's Defense"),
+("Toughness", "Defender Boost", "Reduction", 4, "If unit does not attack first, receive 4 less damage"),
+("Strength +2", "Stat Boost", "Strength", 2, "Grants +2 to Unit's Strength"),
+("Death Blow", "Attacker Boost", "Crit", 20, "If unit attacks first, grants +20 Crit"),
+("Magic +2", "Stat Boost", "Magic", 2, "Grants +2 to Unit's Magic"),
+("Hit +20", "Stat Boost", "Hit", 20, "Grants +20 to Unit's Hit"),
+("Veteran Intuition", "Stat Boost", "Dodge", 30, "Grants +30 to Unit's Dodge"),
+("Grisly Rage", "Defender Boost", "Speed", 6, "If unit does not attack first, grants +6 to Unit's Speed"),
+("Duelist's Blow", "Attacker Boost", "Avoid", 20, "If unit attacks first, grants +20 to Unit's Avoid"),
+("Crit +30", "Stat Boost", "Crit", 30, "Grants +30 to Unit's Crit"),
+("Certain Blow", "Attacker Boost", "Hit", 30, "If unit attacks first, grants +30 to Unit's Hit"),
+("Warding Blow", "Attacker Boost", "Resistance", 10, "If unit attacks first, grants +10 to Unit's Resistance"),
+("Armored Blow", "Attacker Boost", "Defense", 10, "If unit attacks first, grants +10 to Unit's Defense"),
+("Sturdy Hide", "Defender Boost", "Defense", 6, "If unit does not attack first, grants +6 to Unit's Defense"),
+("Fiendish Blow", "Attacker Boost", "Magic", 6, "If unit attacks first, grants +6 to Unit's Magic");
 
 COMMIT;
 
 
 -- 'class_skill' table default entries
 INSERT INTO class_skill (class_id, skill_id, level_required) VALUES
-(1, 2, 10), (3, 1, 10);
+(1, 1, 1), (1, 2, 10), 
+(2, 3, 1), (2, 4, 10),
+(3, 5, 1), (3, 6, 10),
+(4, 7, 1), (4, 8, 10),
+(5, 9, 1), (5, 10, 10),
+(6, 11, 1), (6, 12, 10),
+(7, 13, 5),
+(8, 14, 5),
+(9, 15, 5),
+(10, 16, 5),
+(11, 17, 5),
+(12, 18, 5),
+(13, 19, 5),
+(14, 20, 5),
+(15, 21, 5);
 
 COMMIT;
 
@@ -254,7 +299,7 @@ INSERT INTO unit (name, class_id) VALUES
 ("Claude", 3),
 ("Felix", 2), 
 ("Hapi", 6),
-("Shamir", 11),
+("Shamir", 3),
 ("Alois", 8);
 
 COMMIT;
@@ -268,7 +313,7 @@ INSERT INTO unit_base_stats (unit_id, level, health, strength, magic, skill, spe
 (4, 1, 26, 10, 5, 6, 9, 5, 5, 3),
 (5, 3, 27, 7, 12, 9, 7, 4, 4, 8),
 (6, 11, 33, 18, 8, 21, 14, 17, 12, 8),
-(7, 21, 50, 27, 8, 12, 15, 12, 18, 8);
+(7, 1, 50, 27, 8, 12, 15, 12, 18, 8);
 
 COMMIT;
 
@@ -302,13 +347,6 @@ COMMIT;
 
 -- 'user_unit_skill' table default entries
 -- INSERT INTO user_unit_skill (user_unit_id, skill_id) VALUES 
--- (2, 1);
-
--- COMMIT;
-
-
--- 'user_unit_equipped_skill' table default entries
--- INSERT INTO user_unit_equipped_skill (user_unit_id, user_unit_skill_id) VALUES
 -- (2, 1);
 
 -- COMMIT;
