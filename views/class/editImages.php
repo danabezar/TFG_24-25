@@ -39,7 +39,6 @@ if (isset($_REQUEST["event"], $_SESSION["uploadResults"]) && $_REQUEST["event"] 
     }
 </style>
 
-<link rel="stylesheet" href="views/digimon/css/images.css">
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h3">Modifying <?= $classData->name?>'s images</h1>
@@ -58,11 +57,29 @@ if (isset($_REQUEST["event"], $_SESSION["uploadResults"]) && $_REQUEST["event"] 
             </div>
             <div class="imgSelectorWrapper">
                 <div class="imgWrapper">
-                    <img src="<?= $imgRoute ?>\sprites.png" title="Class Sprites">
+                    <img src="<?= $imgRoute ?>\attack.gif" title="Class Attack">
                 </div>
                 <div class="imgSelector">
-                    <label for="class_sprites">Sprites</label>
-                    <input type="file" name="class_sprites" id="class_sprites">
+                    <label for="class_attack">Attack</label>
+                    <input type="file" name="class_attack" id="class_attack">
+                </div>
+            </div>
+            <div class="imgSelectorWrapper">
+                <div class="imgWrapper">
+                    <img src="<?= $imgRoute ?>\critical.gif" title="Class Critical">
+                </div>
+                <div class="imgSelector">
+                    <label for="class_critical">Critical</label>
+                    <input type="file" name="class_critical" id="class_critical">
+                </div>
+            </div>
+            <div class="imgSelectorWrapper">
+                <div class="imgWrapper">
+                    <img src="<?= $imgRoute ?>\sprite.png" title="Class Sprite">
+                </div>
+                <div class="imgSelector">
+                    <label for="class_sprite">Sprite</label>
+                    <input type="file" name="class_sprite" id="class_sprite">
                 </div>
             </div>
         </div>

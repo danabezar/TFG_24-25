@@ -260,14 +260,15 @@ class ClassModel implements BaseModel{
         try {
             $sqlQuery = "
                 UPDATE `class` SET `name` = :newName, 
-                `type` = :newType 
+                `type` = :newType, `dmg_type` = :newDmgType 
                 WHERE `id` = :id;
             ";
             $preparedQuery = $this->connection->prepare($sqlQuery);
             $dataArray = [
                 ":id" => $id,
-                ":newName" => $class['name'],
-                ":newType" => $class["type"]
+                ":newName" => $class["name"],
+                ":newType" => $class["type"],
+                ":newDmgType" => $class["dmgType"]
             ];
 
             return $preparedQuery->execute($dataArray);
