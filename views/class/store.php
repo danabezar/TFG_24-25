@@ -23,6 +23,7 @@ $classArrayData = [
     "name" => isset($_REQUEST["name"]) ? htmlspecialchars($_REQUEST["name"]) : "",
     "previousName" => isset($_REQUEST["previousName"]) ? htmlspecialchars($_REQUEST["previousName"]) : "",
     "type" => isset($_REQUEST["type"]) ? htmlspecialchars($_REQUEST["type"]) : "",
+    "dmgType" => isset($_REQUEST["dmgType"]) ? ($_REQUEST["dmgType"]) : "",
     "health_growth" => $_REQUEST["health_growth"] ?? "",
     "strength_growth" => $_REQUEST["strength_growth"] ?? "",
     "magic_growth" => $_REQUEST["magic_growth"] ?? "",

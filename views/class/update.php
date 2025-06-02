@@ -43,7 +43,7 @@ if (isset($_SESSION["errors"])) {
                 <?= isset($errors["name"]) ? '<div class="alert alert-danger" role="alert">' . showErrors($errors, "name") . '</div>' : ""; ?>
             </div>
             <div class="form-group">
-                <label for="type_radiougroup">Class Type</label>
+                <label for="type_radiogroup">Class Type</label>
                 <div id="type-radiogroup">
                     <label>
                         <input type="radio" name="type" value="Starter" checked> Starter
@@ -62,6 +62,28 @@ if (isset($_SESSION["errors"])) {
                     </label>
                 </div>
                 <?= isset($errors["type"]) ? '<div class="alert alert-danger" role="alert">' . showErrors($errors, "type") . '</div>' : ""; ?>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="dmgType_radiogroup">Damage Type</label>
+                <div id="dmgType-radiogroup">
+                    <label>
+                        <input type="radio" name="dmgType" value="0" checked> Physical
+                    </label>
+                    <label>
+                        <input type="radio" name="dmgType" value="1"
+                        <?php 
+                            if (isset($_SESSION["formData"]["dmgType"])){
+                                if($_SESSION["formData"]["dmgType"] == 1){
+                                    echo "checked";
+                                }
+                            } else if($classData->dmg_type == 1){
+                                echo "checked";
+                            }
+                        ?>> Magical
+                    </label>
+                </div>
+                <?= isset($errors["dmgType"]) ? '<div class="alert alert-danger" role="alert">' . showErrors($errors, "dmgType") . '</div>' : ""; ?>
             </div>
             <hr>
             <label for="class-growths">Class Growths (%)</label>

@@ -33,6 +33,15 @@ $classSkills = $classController->readSkills($id);
                     Class ID: <strong><?= $class->id ?></strong><br>
                     Name: <strong><?= $class->name ?></strong><br>
                     Type: <strong><?= $class->type ?></strong><br>
+                    Damage Type: <strong>
+                        <?php 
+                        if($class->dmg_type === 0){
+                            echo "Physical";
+                        }else{
+                            echo "Magical";
+                        } 
+                        ?>
+                    </strong><br>
                     Health Growth: <strong><?= $class->health_growth ?>%</strong> <br>
                     Strength Growth: <strong><?= $class->strength_growth ?>%</strong> <br>
                     Magic Growth: <strong><?= $class->magic_growth ?>%</strong> <br>

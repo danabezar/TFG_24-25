@@ -18,6 +18,7 @@ class ClassController{
         $nonNullableFields = [
             "name", 
             "type", 
+            "dmgType", 
             "health_growth", 
             "strength_growth", 
             "magic_growth", 
@@ -164,6 +165,7 @@ class ClassController{
         $nonNullableFields = [
             "name", 
             "type", 
+            "dmgType", 
             "health_growth", 
             "strength_growth", 
             "magic_growth", 

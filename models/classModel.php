@@ -15,11 +15,12 @@ class ClassModel implements BaseModel{
      */
     public function insert(array $class): int | null {
         try {
-            $sqlQuery = "INSERT INTO `class`(`name`, `type`)  VALUES (:name, :type);";
+            $sqlQuery = "INSERT INTO `class`(`name`, `type`, `dmg_type`)  VALUES (:name, :type, :dmgType);";
             $preparedQuery = $this->connection->prepare($sqlQuery);
             $dataArray = [
                 ":name" => $class["name"],
-                ":type" => $class["type"]
+                ":type" => $class["type"],
+                ":dmgType" => $class["dmgType"]
             ];
             $result = $preparedQuery->execute($dataArray);
             
@@ -122,7 +123,7 @@ class ClassModel implements BaseModel{
      */
     public function findByIdDetailed(int $id): stdClass | null {
         $sqlQuery = "
-            SELECT c.`id`, c.`name`, c.`type`, 
+            SELECT c.`id`, c.`name`, c.`type`, c.`dmg_type`, 
             g.`health` AS `health_growth`, g.`strength` AS `strength_growth`, 
             g.`magic` AS `magic_growth`, g.`skill` AS `skill_growth`, 
             g.`speed` AS `speed_growth`, g.`luck` AS `luck_growth`, 
@@ -174,7 +175,7 @@ class ClassModel implements BaseModel{
      */
     public function readAllDetailed(): array | null{
         $sqlQuery = "
-            SELECT c.`id`, c.`name`, c.`type`, 
+            SELECT c.`id`, c.`name`, c.`type`, c.`dmg_type`, 
             g.`health` AS `health_growth`, g.`strength` AS `strength_growth`, 
             g.`magic` AS `magic_growth`, g.`skill` AS `skill_growth`, 
             g.`speed` AS `speed_growth`, g.`luck` AS `luck_growth`, 

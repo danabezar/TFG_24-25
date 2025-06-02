@@ -36,6 +36,8 @@ $userUnits = $userUnitController->listByUserId($user->id);
                     User's Name: <strong><?= $user->username ?></strong> <br>
                     Victories: <strong><?= $user->victories ?></strong> <br>
                     Losses: <strong><?= $user->losses ?></strong> <br>
+                    Current Master Seals: <strong><?= $user->master_seals?></strong><br>
+                    Current Lottery Vouchers: <strong><?= $user->lottery_vouchers?></strong><br>
                 </p>
             </div>
         </div>
