@@ -186,7 +186,9 @@ CREATE TABLE `user_unit_equipped_skill` (
 -- 'user' table default entries
 INSERT INTO user (username, password) VALUES 
 ('Daniel','$2y$10$LpMHZpYiPB5bvfpe82kqquQxLn5bVYYU1jCkxSjbP.HBAKO6K0UAS'),
-('Jesús','$2y$10$nOWI1dcWqFgewI3WmspnA.0JB.rs33aBRhKmsIS59LR9DDX/ezfMO');
+('Admin', 'Placeholder'),
+('Rogelia','Placeholder'),
+('Gervasio', 'Placeholder'),
 
 COMMIT; 
 
@@ -332,21 +334,29 @@ COMMIT;
 
 
 -- 'user_unit' table default entries
--- INSERT INTO user_unit (user_id, unit_id, class_id) VALUES
--- (1, 1, 5), (1, 2, 11), (1, 3, 8), (2, 3, 8);
+INSERT INTO user_unit (user_id, unit_id, class_id, level) VALUES
+(1, 2, 2, 1), (1, 4, 4, 1), (1, 5, 6, 1),
+(2, 1, 15, 1), (2, 2, 4, 9), (2, 5, 8, 1),
+(3, 3, 3, 5), (3, 5, 8, 1), (3, 6, 11, 11),
+(4, 2, 2, 1), (4, 3, 3, 1);
 
--- COMMIT;
+COMMIT;
 
 
 -- 'user_unit_stat_gains' table default entries
--- INSERT INTO user_unit_stat_gains (user_unit_id) VALUES
--- (1), (2), (3), (4);
+INSERT INTO user_unit_stat_gains (user_unit_id, health, strength, magic, skill, speed, luck, defense, resistance) VALUES
+(1, 0, 0, 0, 0, 0, 0, 0, 0), (2, 0, 0, 0, 0, 0, 0, 0, 0), (3, 0, 0, 0, 0, 0, 0, 0, 0), 
+(4, 12, 15, 3, 9, 8, 6, 13, 7), (5, 7, 8, 1, 5, 7, 6, 9, 2), (6, 4, 3, 0, 2, 1, 4, 2, 0),
+(7, 0, 0, 0, 0, 0, 0, 0, 0), (8, 0, 0, 0, 0, 0, 0, 0, 0), (9, 0, 0, 0, 0, 0, 0, 0, 0), 
+(10, 0, 0, 0, 0, 0, 0, 0, 0), (11, 0, 0, 0, 0, 0, 0, 0, 0);
 
--- COMMIT;
+COMMIT;
 
 
 -- 'user_unit_skill' table default entries
--- INSERT INTO user_unit_skill (user_unit_id, skill_id) VALUES 
--- (2, 1);
+INSERT INTO user_unit_skill (user_unit_id, skill_id) VALUES 
+(4, 3), (4, 6), (4, 9), (4, 10),
+(5, 2), (5, 9), (5, 10), (5, 13),
+(6, 3), (6, 6), (6, 9), (6, 10), (6, 16);
 
--- COMMIT;
+COMMIT;
