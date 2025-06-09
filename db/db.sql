@@ -186,9 +186,9 @@ CREATE TABLE `user_unit_equipped_skill` (
 -- 'user' table default entries
 INSERT INTO user (username, password) VALUES 
 ('Daniel','$2y$10$LpMHZpYiPB5bvfpe82kqquQxLn5bVYYU1jCkxSjbP.HBAKO6K0UAS'),
-('Admin', 'Placeholder'),
-('Rogelia','Placeholder'),
-('Gervasio', 'Placeholder'),
+('Admin', '$2y$10$lidQVNZ4ofFK2jkOXerwL.As6xuOizEml8gWgTwypdjmiawFIMXkK'),
+('Rogelia','$2y$10$VYVoUs2VWwHq/0lRtrUC9ufmj5XTPfUg2xmrDRr77LpDHC.nvjSMS'),
+('Gervasio', '$2y$10$qkhsxXVijEIbWlDbMjC8SO1AYRpZb.IKtwpfe8ZKAQHLcj2M3SUtK');
 
 COMMIT; 
 
@@ -335,10 +335,10 @@ COMMIT;
 
 -- 'user_unit' table default entries
 INSERT INTO user_unit (user_id, unit_id, class_id, level) VALUES
-(1, 2, 2, 1), (1, 4, 4, 1), (1, 5, 6, 1),
-(2, 1, 15, 1), (2, 2, 4, 9), (2, 5, 8, 1),
-(3, 3, 3, 5), (3, 5, 8, 1), (3, 6, 11, 11),
-(4, 2, 2, 1), (4, 3, 3, 1);
+(1, 2, 4, 1), (1, 4, 2, 1), (1, 5, 6, 1),
+(2, 1, 14, 1), (2, 2, 4, 9), (2, 7, 8, 1),
+(3, 3, 3, 5), (3, 7, 8, 1), (3, 6, 11, 11),
+(4, 2, 4, 1), (4, 3, 3, 1);
 
 COMMIT;
 
